@@ -56,9 +56,9 @@
 
 ;;; Customized variables
 (defgroup lightning nil
-	"A lightning-fast keymap for Emacs"
-	:prefix "lightning-"
-	:group 'editing)
+  "A lightning-fast keymap for Emacs"
+  :prefix "lightning-"
+  :group 'editing)
 
 (defcustom lightning-keymap-toggle-key "<f5>"
   "Sets a global key binding to toggle the `lightning-keymap-mode'.
@@ -74,7 +74,7 @@ To prevent this behavior you can set the variable's value to nil."
 instead causes the `lightning-keymap-mode' to only bind the keys used
 for navigation (j, k, l, ;) and for newlines (m)."
   :group 'lightning
-	:type 'boolean)
+  :type 'boolean)
 
 ;; customs for the evaluation functions in the three different layers
 ;; custom for activate -bonus: parts, which depend on additional packages
@@ -83,7 +83,7 @@ for navigation (j, k, l, ;) and for newlines (m)."
 ;; Defining a global key to toggle the lightning-keymap (unless the
 ;; lightning-keymap-toggle-key wasn't set to nil).
 (global-set-key (kbd lightning-keymap-toggle-key)
-'lightning-keymap-mode)
+		'lightning-keymap-mode)
 
 
 ;; Customized keybindings for navigation, killing and various other
@@ -99,15 +99,15 @@ for navigation (j, k, l, ;) and for newlines (m)."
     (define-key map (kbd "M-S backspace") 'kill-sentence)
     (define-key map (kbd "M-S-j") 'windmove-left)
     (define-key map (kbd "M-J") 'windmove-left)
-    (define-key map (kbd "M-S-k") 'windmove-up)
-    (define-key map (kbd "M-K") 'windmove-up)
-    (define-key map (kbd "M-S-l") 'windmove-down)
-    (define-key map (kbd "M-L") 'windmove-down)
+    (define-key map (kbd "M-S-l") 'windmove-up)
+    (define-key map (kbd "M-L") 'windmove-up)
+    (define-key map (kbd "M-S-k") 'windmove-down)
+    (define-key map (kbd "M-K") 'windmove-down)
     (define-key map (kbd "M-S-;") 'windmove-right)
     (define-key map (kbd "M-:") 'windmove-right)
     (define-key map (kbd "C-j") 'left-char)
-    (define-key map (kbd "C-l") 'next-line)
-    (define-key map (kbd "C-k") 'previous-line)
+    (define-key map (kbd "C-k") 'next-line)
+    (define-key map (kbd "C-l") 'previous-line)
     (define-key map (kbd "C-;") 'right-char)
     ;; For faster scrolling
     (define-key map (kbd "C-S-j") (lambda()
@@ -117,18 +117,18 @@ for navigation (j, k, l, ;) and for newlines (m)."
 				      (left-char)
 				      (setq count (+ count 1)))))
     (define-key map (kbd "C-:") (lambda()
-				    (interactive)
-				    (setq count 0)
-				    (while (< count 5)
-				      (right-char)
-				      (setq count (+ count 1)))))
-    (define-key map (kbd "C-S-k") (lambda()
+				  (interactive)
+				  (setq count 0)
+				  (while (< count 5)
+				    (right-char)
+				    (setq count (+ count 1)))))
+    (define-key map (kbd "C-S-l") (lambda()
 				    (interactive)
 				    (setq count 0)
 				    (while (< count 15)
 				      (previous-line)
 				      (setq count (+ count 1)))))
-    (define-key map (kbd "C-S-l") (lambda()
+    (define-key map (kbd "C-S-k") (lambda()
 				    (interactive)
 				    (setq count 0)
 				    (while (< count 15)
@@ -136,28 +136,28 @@ for navigation (j, k, l, ;) and for newlines (m)."
 				      (setq count (+ count 1)))))
     ;; For even fast scrolling
     (define-key map (kbd "C-M-S-j") (lambda()
-				    (interactive)
-				    (setq count 0)
-				    (while (< count 15)
-				      (left-char)
-				      (setq count (+ count 1)))))
+				      (interactive)
+				      (setq count 0)
+				      (while (< count 15)
+					(left-char)
+					(setq count (+ count 1)))))
     (define-key map (kbd "C-M-:") (lambda()
 				    (interactive)
 				    (setq count 0)
 				    (while (< count 15)
 				      (right-char)
 				      (setq count (+ count 1)))))
-    (define-key map (kbd "C-M-S-k") 'backward-page)
-    (define-key map (kbd "C-M-S-l") 'forward-page)
+    (define-key map (kbd "C-M-S-l") 'backward-page)
+    (define-key map (kbd "C-M-S-k") 'forward-page)
     ;; For jumping between words and paragraphs
     (define-key map (kbd "M-j") 'left-word)
-    (define-key map (kbd "M-l") 'forward-paragraph)
-    (define-key map (kbd "M-k") 'backward-paragraph)
+    (define-key map (kbd "M-k") 'forward-paragraph)
+    (define-key map (kbd "M-l") 'backward-paragraph)
     (define-key map (kbd "M-;") 'right-word)
     ;; For jumping through the whole document
     (define-key map (kbd "C-M-j") 'move-beginning-of-line)
-    (define-key map (kbd "C-M-k") 'beginning-of-buffer)
-    (define-key map (kbd "C-M-l") 'end-of-buffer)
+    (define-key map (kbd "C-M-l") 'beginning-of-buffer)
+    (define-key map (kbd "C-M-k") 'end-of-buffer)
     (define-key map (kbd "C-M-;") 'move-end-of-line)
     ;; Killing
     (define-key map (kbd "C-,") 'backward-delete-char-untabify)
@@ -281,10 +281,10 @@ for navigation (j, k, l, ;) and for newlines (m)."
     ;; Including the shift for adding a comment at the beginning
     ;; of the new line.
     (define-key map (kbd "M-M") (lambda ()
-				    (interactive)
-				    (move-end-of-line 1)
-				    (comment-indent-new-line)
-				    (self-insert-command 1)))
+				  (interactive)
+				  (move-end-of-line 1)
+				  (comment-indent-new-line)
+				  (self-insert-command 1)))
     (define-key map (kbd "<C-M-m>")
       (lambda ()
 	(interactive)
@@ -315,50 +315,50 @@ for navigation (j, k, l, ;) and for newlines (m)."
 
 ;; 1. Mode-specific evaluation functions
 (unless lightning-keymap-basic
-	;; ESS (Emacs speaks statistics) - a very convenient mode for
-	;; manipulating R files.
-	(when (assq 'ess package-alist)
-		(add-hook
-		 'ess-mode-hook
-		 (lambda()
-			 (local-set-key (kbd "M-j") 'left-word)
-			 (local-set-key (kbd "C-n")
-											'lightning-keymap-ess-evaluation-layer-1)
-			 (local-set-key (kbd "<M-n>")
-											'lightning-keymap-ess-evaluation-layer-2)
-			 (local-set-key (kbd "C-M-n")
-											'lightning-keymap-ess-evaluation-layer-3))))
-	;; When manipulating RMarkdown files using `polymode' the export
-	;; function bound to `lightning-keymap-ess-evaluation-layer-3' should
-	;; be working in the markdown part of the document as well.
-	(when (assq 'polymode-minor-mode minor-mode-alist)
-		(add-hook
-		 'markdown-mode-hook
-		 (lambda()
-			 (local-set-key (kbd "C-M-n")
-											'lightning-keymap-ess-evaluation-layer-3))))
+  ;; ESS (Emacs speaks statistics) - a very convenient mode for
+  ;; manipulating R files.
+  (when (assq 'ess package-alist)
+    (add-hook
+     'ess-mode-hook
+     (lambda()
+       (local-set-key (kbd "M-j") 'left-word)
+       (local-set-key (kbd "C-n")
+		      'lightning-keymap-ess-evaluation-layer-1)
+       (local-set-key (kbd "<M-n>")
+		      'lightning-keymap-ess-evaluation-layer-2)
+       (local-set-key (kbd "C-M-n")
+		      'lightning-keymap-ess-evaluation-layer-3))))
+  ;; When manipulating RMarkdown files using `polymode' the export
+  ;; function bound to `lightning-keymap-ess-evaluation-layer-3' should
+  ;; be working in the markdown part of the document as well.
+  (when (assq 'polymode-minor-mode minor-mode-alist)
+    (add-hook
+     'markdown-mode-hook
+     (lambda()
+       (local-set-key (kbd "C-M-n")
+		      'lightning-keymap-ess-evaluation-layer-3))))
 
-	;; Python-mode
-	;; Since I don't seem to find the Python package in the `package-alist'
-	;; variable, I will just check whether there is a function called
-	;; 'python-mode'.
-	(when (functionp 'python-mode)
-		(add-hook
-		 'python-mode-hook
-		 (lambda()
-			 (local-set-key (kbd "M-j") 'left-word)
-			 (local-set-key (kbd "C-n")
-											'lightning-keymap-python-evaluation-layer-1)
-			 (local-set-key (kbd "<M-n>")
-											'lightning-keymap-python-evaluation-layer-2)
-			 (local-set-key (kbd "C-M-n")
-											'lightning-keymap-python-evaluation-layer-3))))
-	;; End of 1. Mode-specific evaluation functions
-	)
+  ;; Python-mode
+  ;; Since I don't seem to find the Python package in the `package-alist'
+  ;; variable, I will just check whether there is a function called
+  ;; 'python-mode'.
+  (when (functionp 'python-mode)
+    (add-hook
+     'python-mode-hook
+     (lambda()
+       (local-set-key (kbd "M-j") 'left-word)
+       (local-set-key (kbd "C-n")
+		      'lightning-keymap-python-evaluation-layer-1)
+       (local-set-key (kbd "<M-n>")
+		      'lightning-keymap-python-evaluation-layer-2)
+       (local-set-key (kbd "C-M-n")
+		      'lightning-keymap-python-evaluation-layer-3))))
+  ;; End of 1. Mode-specific evaluation functions
+  )
 
 ;; 2. Shadowing other keybindings
 
-				 
+
 
 ;; Activating the customized keybindings with every major mode.
 (define-minor-mode lightning-keymap-mode
