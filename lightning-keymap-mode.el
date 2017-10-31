@@ -3,10 +3,11 @@
 ;; Author: Philipp Müller <thetruephil@googlemail.com>
 ;; Maintainer: Philipp Müller <thetruephil@googlemail.com>
 ;; Version: 0.1.0
+;; Created: October 19, 2017
 ;; X-URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
 ;; URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
 ;; Keywords: keymap, navigation
-;; Package-Requires: ((iedit 0.97)(rect-mark 1.4))
+;; Package-Requires: ((iedit 0.97))
 ;; Compatibility: GNU Emacs: >21.x
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -32,7 +33,7 @@
 ;;    (lightning-keymap-mode 1)
 ;;
 ;;
-;;  Most important variables;
+;;  Most important variables:
 ;;
 ;;    `lightning-keymap-toggle-key'
 ;;
@@ -41,6 +42,50 @@
 ;;      key binding, you can initialize the variable with nil.
 ;;      Default: "<F5>".
 ;;
+;;    `lightning-keymap-basic'
+;;
+;;      If set to non-nil, all bindings of the lightning-keymap-mode
+;;      will be activated. Setting it to `t' instead will only bind
+;;      the keys used for navigation (j, k, l, ;) and for line breaks
+;;      (m). Default: nil.
+;;
+;;  Additional variables to customize the navigation speed:
+;;  
+;;    `lightning-keymap-fifth-layer-jump-characters'
+;;
+;;      Number of characters to jump in the fifth, more faster,
+;;      of navigation. This constant will affect the left and right
+;;      navigation using `C-S-j' and `C-:'. Default = 3.
+;;
+;;    `lightning-keymap-fifth-layer-jump-lines'
+;;
+;;      Number of lines to jump in the fifth, more faster, layer of
+;;      navigation. This constant will affect the up and down
+;;      navigation using `C-S-l' and `C-S-k'. Default = 4.
+;;
+;;    `lightning-keymap-sixth-layer-jump-characters'
+;;
+;;      Number of characters to jump in the sixth, even more faster,
+;;      layer of navigation. This constant will affect the left and
+;;      right navigation using `C-M-S-j' and `C-M-:'. Default = 15. 
+;;
+;;    `lightning-keymap-sixth-layer-jump-lines'
+;;    
+;;      Number of lines to jump in the sixth, even more faster, layer
+;;      of navigation. This constant will affect the up and down
+;;      navigation using `C-M-S-l' and `C-M-S-k'. Default = 30. 
+;;
+;;    `lightning-keymap-fourth-layer-delete-words'
+;;
+;;      Number of words to delete either forward or backward in the
+;;      fourth layer. This constant will be bound to `C-S-.' and
+;;      `C-S-,'. Default = 5. 
+;;
+;;    `lightning-keymap-fifth-layer-delete-characters'
+;;
+;;      Number of characters to delete either forward or backward in
+;;      the fourth layer. This constant will be bound to `C-S-.' and
+;;      `C-S-,'. Default = 5.
 ;;
 ;;  For more information check out the projects Github page:
 ;;  https://github.com/theGreatWhiteShark/lightning-keymap-mode
@@ -55,240 +100,188 @@
 (require 'rect-mark)
 
 ;;; Customized variables
+;;;
 (defgroup lightning nil
   "A lightning-fast keymap for Emacs"
   :prefix "lightning-"
   :group 'editing)
 
 (defcustom lightning-keymap-toggle-key "<f5>"
-  "Sets a global key binding to toggle the `lightning-keymap-mode'.
-The input has to be a string and a  valid argument for the `kbd' 
-function.
+  "Sets a global key binding to toggle the
+  `lightning-keymap-mode'. The input has to be a string and a valid
+  argument for the `kbd' function (e.g. \"C-M-a\" or \"<f5>\").
 
-To prevent this behavior you can set the variable's value to nil."
+  To prevent this behavior you can set the variable's value to nil."
   :group 'lightning
   :type 'string)
 
 (defcustom lightning-keymap-basic nil
-  "If set to non-nil, all bindings will be activated. Setting it to `t' 
-instead causes the `lightning-keymap-mode' to only bind the keys used
-for navigation (j, k, l, ;) and for newlines (m)."
+  "If set to non-nil, all bindings of the lightning-keymap-mode will
+  be activated. Setting it to `t' instead will only bind the keys used
+  for navigation (j, k, l, ;) and for line breaks (m). Default: nil."
   :group 'lightning
   :type 'boolean)
 
-;; customs for the evaluation functions in the three different layers
-;; custom for activate -bonus: parts, which depend on additional packages
-;; custom for jumping length
+(defcustom lightning-keymap-fifth-layer-jump-characters 3
+  "Number of characters to jump in the fifth, more faster, layer of
+  navigation. This constant will affect the left and right navigation
+  using `C-S-j' and `C-:'. Default = 3."
+  :group 'lightning
+  :type 'integer)
+
+(defcustom lightning-keymap-fifth-layer-jump-lines 4
+  "Number of lines to jump in the fifth, more faster, layer of
+  navigation. This constant will affect the up and down navigation
+  using `C-S-l' and `C-S-k'. Default = 4."
+  :group 'lightning
+  :type 'integer)
+
+(defcustom lightning-keymap-sixth-layer-jump-characters 15
+  "Number of characters to jump in the sixth, even more faster, layer of
+  navigation. This constant will affect the left and right navigation
+  using `C-M-S-j' and `C-M-:'. Default = 15."
+  :group 'lightning
+  :type 'integer)
+
+(defcustom lightning-keymap-sixth-layer-jump-lines 30
+  "Number of lines to jump in the sixth, even more faster, layer of
+  navigation. This constant will affect the up and down navigation
+  using `C-M-S-l' and `C-M-S-k'. Default = 30."
+  :group 'lightning
+  :type 'integer)
+
+(defcustom lightning-keymap-fourth-layer-delete-words 5
+  "Number of words to delete either forward or backward in the
+  fourth layer. This constant will be bound to `C-S-.' and
+  `C-S-,'. Default = 5."
+  :group 'lightning
+  :type 'interger)
+
+(defcustom lightning-keymap-fifth-layer-delete-characters 5
+  "Number of characters to delete either forward or backward in the
+  fourth layer. This constant will be bound to `C-S-.' and
+  `C-S-,'. Default = 5."
+  :group 'lightning
+  :type 'interger)
+
 
 ;; Defining a global key to toggle the lightning-keymap (unless the
 ;; lightning-keymap-toggle-key wasn't set to nil).
+;; It has to be a global one, because it has to be still available
+;; when the lightning-keymap-mode is disabled.
 (global-set-key (kbd lightning-keymap-toggle-key)
 		'lightning-keymap-mode)
 
-
-;; Customized keybindings for navigation, killing and various other
-;; useful things.
-;; In order to not consider any special cases and to not get annoyed by
-;; minor-mode key maps (especially flyspell), I will define my own
-;; minor-mode which enforces my custom key bindings on all the major
-;; modes. Whenever I want to switch back to the original key bindings,
-;; I just disable this minor-mode.
+;; Basic version of the keymap featuring only simple navigation,
+;; buffer switching, and line breaking.
 (defvar lightning-keymap-mode-map
   (let ((map (make-sparse-keymap)))
+    ;;
     ;; Navigation
-    (define-key map (kbd "M-S backspace") 'kill-sentence)
-    (define-key map (kbd "M-S-j") 'windmove-left)
-    (define-key map (kbd "M-J") 'windmove-left)
-    (define-key map (kbd "M-S-l") 'windmove-up)
-    (define-key map (kbd "M-L") 'windmove-up)
-    (define-key map (kbd "M-S-k") 'windmove-down)
-    (define-key map (kbd "M-K") 'windmove-down)
-    (define-key map (kbd "M-S-;") 'windmove-right)
-    (define-key map (kbd "M-:") 'windmove-right)
+    ;;
+    ;; First layer: neighbouring characters and lines
     (define-key map (kbd "C-j") 'left-char)
     (define-key map (kbd "C-k") 'next-line)
     (define-key map (kbd "C-l") 'previous-line)
     (define-key map (kbd "C-;") 'right-char)
-    ;; For faster scrolling
-    (define-key map (kbd "C-S-j") (lambda()
-				    (interactive)
-				    (setq count 0)
-				    (while (< count 5)
-				      (left-char)
-				      (setq count (+ count 1)))))
-    (define-key map (kbd "C-:") (lambda()
-				  (interactive)
-				  (setq count 0)
-				  (while (< count 5)
-				    (right-char)
-				    (setq count (+ count 1)))))
-    (define-key map (kbd "C-S-l") (lambda()
-				    (interactive)
-				    (setq count 0)
-				    (while (< count 15)
-				      (previous-line)
-				      (setq count (+ count 1)))))
-    (define-key map (kbd "C-S-k") (lambda()
-				    (interactive)
-				    (setq count 0)
-				    (while (< count 15)
-				      (next-line)
-				      (setq count (+ count 1)))))
-    ;; For even fast scrolling
-    (define-key map (kbd "C-M-S-j") (lambda()
-				      (interactive)
-				      (setq count 0)
-				      (while (< count 15)
-					(left-char)
-					(setq count (+ count 1)))))
-    (define-key map (kbd "C-M-:") (lambda()
-				    (interactive)
-				    (setq count 0)
-				    (while (< count 15)
-				      (right-char)
-				      (setq count (+ count 1)))))
-    (define-key map (kbd "C-M-S-l") 'backward-page)
-    (define-key map (kbd "C-M-S-k") 'forward-page)
-    ;; For jumping between words and paragraphs
+    ;; Second layer: beginning/end of word/paragraph
     (define-key map (kbd "M-j") 'left-word)
     (define-key map (kbd "M-k") 'forward-paragraph)
     (define-key map (kbd "M-l") 'backward-paragraph)
     (define-key map (kbd "M-;") 'right-word)
-    ;; For jumping through the whole document
+    ;; Third layer: beginning/end of line/buffer
     (define-key map (kbd "C-M-j") 'move-beginning-of-line)
     (define-key map (kbd "C-M-l") 'beginning-of-buffer)
     (define-key map (kbd "C-M-k") 'end-of-buffer)
     (define-key map (kbd "C-M-;") 'move-end-of-line)
-    ;; Killing
-    (define-key map (kbd "C-,") 'backward-delete-char-untabify)
-    (define-key map (kbd "C-.") 'delete-forward-char)
-    (define-key map (kbd "M-,") (lambda()
-				  (interactive)
-				  (if mark-active
-				      (kill-region
-				       (region-beginning)
-				       (region-end))
-				    (backward-kill-word 1))))
-    (define-key map (kbd "M-.") (lambda()
-				  (interactive)
-				  (if mark-active
-				      (kill-region
-				       (region-beginning)
-				       (region-end))
-				    (kill-word 1))))
-    (define-key map (kbd "C-M-.") 'kill-line)
-    (define-key map (kbd "C-M-,") 'kill-whole-line)
-    ;; Copying (it's not that convenient to have the copying and yanking
-    ;; in a row different than the one used for killing. But in order
-    ;; to avoid conflicts with the C-n behavior of the terminal I will
-    ;; go with this setting for now.
-    ;; (copy word, copy line, copy paragraph)
-    (define-key map (kbd "C-p") (lambda()
-				  (interactive)
-				  (left-word)
-				  (mark-word)
-				  (copy-region-as-kill
-				   (region-beginning)
-				   (region-end))))
-    (define-key map (kbd "M-p") (lambda()
-				  (interactive)
-				  (if mark-active
-				      (copy-region-as-kill
-				       (region-beginning)
-				       (region-end))
-				    (copy-region-as-kill
-				     (line-beginning-position)
-				     (line-end-position)))))
-    (define-key map (kbd "C-M-p") (lambda()
-				    (interactive)
-				    (backward-paragraph)
-				    (mark-paragraph)
-				    (copy-region-as-kill
-				     (region-beginning)
-				     (region-end))))
-    ;; Yanking (at point, newline and yank, yank in previous line)
-    (define-key map (kbd "C-o") 'yank)
-    (define-key map (kbd "M-o") (lambda()
-				  (interactive)
-				  (move-end-of-line 1)
-				  (newline-and-indent)
-				  (yank)))
-    (define-key map (kbd "C-M-o") 'helm-show-kill-ring)
-    ;; Commenting (insert comment, comment line, paragraph)
-    (define-key map (kbd "C-'") (lambda()
-				  (interactive)
-				  (insert comment-start)
-				  (insert "  ")
-				  (insert comment-end)
-				  (left-char
-				   (+ (string-width comment-end) 1))))
-    (define-key map (kbd "M-'") (lambda()
-				  (interactive)
-				  (if mark-active
-				      (comment-or-uncomment-region
-				       (region-beginning)
-				       (region-end))
-				    (comment-or-uncomment-region
-				     (line-beginning-position)
-				     (line-end-position)))))
-
-    (define-key map (kbd "C-M-'") (lambda()
-				    (interactive)
-				    (backward-paragraph)
-				    (mark-paragraph)
-				    (comment-or-uncomment-region
-				     (region-beginning)
-				     (region-end))))
-    ;; Indenting( line, paragraph, buffer )
-    ;; Don't bind this or the TAB won't work anymore
-    ;; (define-key map (kbd "C-i") 'indent-region)
-    (define-key map (kbd "M-i") (lambda()
-				  (interactive)
-				  (if mark-active
-				      (indent-region
-				       (region-beginning)
-				       (region-end))
-				    (progn
-				      (backward-paragraph)
-				      (mark-paragraph)
-				      (indent-region
-				       (region-beginning)
-				       (region-end))))))
-    (define-key map (kbd "C-M-i") (lambda ()
-				    (interactive)
-				    (mark-whole-buffer)
-				    (indent-region
-				     (region-beginning)
-				     (region-end))))
-    ;; Cycle through buffers.
-    (define-key map (kbd "<C-tab>") 'bury-buffer)
-    ;; Replacing strings
-    (define-key map (kbd "C-\\") 'iedit-mode)
-    (define-key map (kbd "M-\\") 'replace-string)
-    ;; Rectangle marking, cutting, pasting
-    (define-key map (kbd "C-u") 'rm-set-mark)
-    (define-key map (kbd "M-u") 'rm-kill-region)
-    (define-key map (kbd "C-M-u") 'rm-kill-ring-save)
-    ;; Binding something to Ctrl-m causes problems because Emacs does not
-    ;; destinguish between Ctrl-m and RET due to historical reasons
-    ;; https://emacs.stackexchange.com/questions/20240/how-to-distinguish-c-m-from-return
-    (define-key input-decode-map [?\C-\M-M] [C-M-m])
-    (define-key input-decode-map [?\M-n] [M-n])
+    ;; Fourth layer: switching between buffers
+    (define-key map (kbd "M-J") 'windmove-left)
+    (define-key map (kbd "M-L") 'windmove-up)
+    (define-key map (kbd "M-K") 'windmove-down)
+    (define-key map (kbd "M-:") 'windmove-right)
+    ;; Fifth layer: faster scrolling than in the first layer
+    (define-key map (kbd "C-S-j")
+      (lambda()
+	(interactive)
+	(setq count 0)
+	(while (< count lightning-keymap-fifth-layer-jump-characters)
+	  (left-char)
+	  (setq count (+ count 1)))))
+    (define-key map (kbd "C-:")
+      (lambda()
+	(interactive)
+	(setq count 0)
+	(while (< count lightning-keymap-fifth-layer-jump-characters)
+	  (right-char)
+	  (setq count (+ count 1)))))
+    (define-key map (kbd "C-S-l")
+      (lambda()
+	(interactive)
+	(setq count 0)
+	(while (< count lightning-keymap-fifth-layer-jump-lines)
+	  (previous-line)
+	  (setq count (+ count 1)))))
+    (define-key map (kbd "C-S-k")
+      (lambda()
+	(interactive)
+	(setq count 0)
+	(while (< count lightning-keymap-fifth-layer-jump-lines)
+	  (next-line)
+	  (setq count (+ count 1)))))
+    ;; Sixth layer: even faster scrolling than in the second layer
+    (define-key map (kbd "C-M-S-j")
+      (lambda()
+	(interactive)
+	(setq count 0)
+	(while (< count lightning-keymap-sixth-layer-jump-characters)
+	  (left-char)
+	  (setq count (+ count 1)))))
+    (define-key map (kbd "C-M-:")
+      (lambda()
+	(interactive)
+	(setq count 0)
+	(while (< count lightning-keymap-sixth-layer-jump-characters)
+	  (right-char)
+	  (setq count (+ count 1)))))
+    (define-key map (kbd "C-M-S-l")
+      (lambda()
+	(interactive)
+	(setq count 0)
+	(while (< count lightning-keymap-sixth-layer-jump-lines)
+	  (previous-line)
+	  (setq count (+ count 1)))))
+    (define-key map (kbd "C-M-S-k")
+      (lambda()
+	(interactive)
+	(setq count 0)
+	(while (< count lightning-keymap-sixth-layer-jump-lines)
+	  (next-line)
+	  (setq count (+ count 1)))))
+    ;; Alternative one could use the following functions to jump
+    ;; forward and backward a whole page.
+    ;; (define-key map (kbd "C-M-S-l") 'backward-page)
+    ;; (define-key map (kbd "C-M-S-k") 'forward-page)
+    ;;
+    ;; Line breaks
+    ;; 
+    ;; Naturally, "\C-m" is bound to a newline in both Emacs and the
+    ;; Linux terminal. No need to duplicate it here.
+    ;; Second layer: Move to the end of the line and do a line break
+    ;; there.
     (define-key map (kbd "M-m") (lambda ()
 				  (interactive)
 				  (move-end-of-line 1)
 				  (newline-and-indent)))
-    ;; Including the shift for adding a comment at the beginning
-    ;; of the new line.
-    (define-key map (kbd "M-M") (lambda ()
-				  (interactive)
-				  (move-end-of-line 1)
-				  (comment-indent-new-line)
-				  (self-insert-command 1)))
+    ;; Third layer: Move to the end of the previous line and do a line
+    ;; break there. In addition make sure the input event is
+    ;; interpreted as desired.
+    (define-key input-decode-map [?\C-\M-M] [C-M-m])
     (define-key map (kbd "<C-M-m>")
       (lambda ()
 	(interactive)
 	(if (string= (what-line) "Line 1")
+	    ;; Check whether or not the point is already in the first
+	    ;; line. If so, Emacs would throw an error.
 	    (progn
 	      (move-beginning-of-line 1)
 	      (newline-and-indent)
@@ -297,23 +290,228 @@ for navigation (j, k, l, ;) and for newlines (m)."
 	    (previous-line)
 	    (move-end-of-line 1)
 	    (newline-and-indent)))))
+    ;; Fourth layer: Move to the end of the line and do a line break
+    ;; there. If there is a comment in the current line, the next one
+    ;; should be commented too.
+    (define-key map (kbd "M-M") (lambda ()
+				  (interactive)
+				  (move-end-of-line 1)
+				  (comment-indent-new-line)
+				  (self-insert-command 1)))
     map)
   "lightning-keymap-mode keymap.")
+;;; End of basic key bindings and map variable definition.
 
+;;;
+;;; Advanced (and default) lightning-keymap layout
+;;;
+;; This adds several additional bindings for killing, yanking,
+;; indenting, commenting, and string replacement
+(unless lightning-keymap-basic
+  ;;
+  ;; Killing
+  ;;
+  ;; First layer: deleting the next/previous character or region
+  (define-key lightning-keymap-mode-map (kbd "C-,")
+    (lambda()
+      (interactive)
+      (if mark-active
+	  (kill-region (region-beginning) (region-end))
+	(backward-delete-char-untabify 1))))
+  (define-key lightning-keymap-mode-map (kbd "C-.")
+    (lambda()
+      (interactive)
+      (if mark-active
+	  (kill-region (region-beginning) (region-end))
+	(delete-forward-char 1))))
+  ;; Second layer: delete a forward/backward a word or region
+  (define-key lightning-keymap-mode-map (kbd "M-,")
+    (lambda()
+      (interactive)
+      (if mark-active
+	  (kill-region (region-beginning) (region-end))
+	(backward-kill-word 1))))
+  (define-key lightning-keymap-mode-map (kbd "M-.")
+    (lambda()
+      (interactive)
+      (if mark-active
+	  (kill-region (region-beginning) (region-end))
+	(kill-word 1))))
+  ;; Third layer: delete forward or delete the whole line
+  (define-key lightning-keymap-mode-map (kbd "C-M-.") 'kill-line)
+  (define-key lightning-keymap-mode-map (kbd "C-M-,")
+    'kill-whole-line)
+  ;; Fourth layer: delete a forward/backward multiple words or region
+  (define-key lightning-keymap-mode-map (kbd "M-<")
+    (lambda()
+      (interactive)
+      (if mark-active
+	  (kill-region (region-beginning) (region-end))
+	(backward-kill-word
+	 lightning-keymap-fourth-layer-delete-words))))
+  (define-key lightning-keymap-mode-map (kbd "M->")
+    (lambda()
+      (interactive)
+      (if mark-active
+	  (kill-region (region-beginning) (region-end))
+	(kill-word lightning-keymap-fourth-layer-delete-words))))
+  ;; Fifth layer: delete forward or backward multiple characters or
+  ;; region. 
+  (define-key lightning-keymap-mode-map (kbd "C-<")
+    (lambda()
+      (interactive)
+      (if mark-active
+	  (kill-region (region-beginning) (region-end))
+	(backward-delete-char-untabify
+	 lightning-keymap-fifth-layer-delete-characters))))
+  (define-key lightning-keymap-mode-map (kbd "C->")
+    (lambda()
+      (interactive)
+      (if mark-active
+	  (kill-region (region-beginning) (region-end))
+	(delete-forward-char 
+	 lightning-keymap-fifth-layer-delete-characters))))
+  ;; Sixth layer: forward/backward delete paragraph
+  (define-key lightning-keymap-mode-map (kbd "C-M-,")
+    (lambda()
+      (interactive)
+      (backward-kill-paragraph 1)))
+  (define-key lightning-keymap-mode-map (kbd "C-M-.")
+    (lambda()
+      (interactive)
+      (kill-paragraph 1)))
+  ;;
+  ;; Copying
+  ;;
+  ;; First layer: Copy the current word or region
+  (define-key lightning-keymap-mode-map (kbd "C-o")
+    (lambda()
+      (interactive)
+      (save-excursion
+	(if mark-active
+	    (kill-region (region-beginning) (region-end))
+	  (progn
+	    (left-word)
+	    (mark-word)
+	    (copy-region-as-kill (region-beginning) (region-end)))))))
+  ;; Second layer: Copy the current line or region
+  (define-key lightning-keymap-mode-map (kbd "M-o")
+    (lambda()
+      (interactive)
+      (save-excursion
+	(if mark-active
+	    (copy-region-as-kill (region-beginning) (region-end))
+	  (copy-region-as-kill (line-beginning-position)
+			       (line-end-position))))))
+  ;; Third layer: Copy the whole paragraph
+  (define-key lightning-keymap-mode-map (kbd "C-M-o")
+    (lambda()
+      (interactive)
+      (save-excursion
+	(backward-paragraph)
+	(mark-paragraph)
+	(copy-region-as-kill (region-beginning) (region-end)))))
+  ;;
+  ;; Yanking
+  ;;
+  ;; First layer: Yank the last element of the kill-ring
+  (define-key lightning-keymap-mode-map (kbd "C-i") 'yank)
+  ;; Second layer: Yank the last element of the kill-ring in a newline
+  (define-key lightning-keymap-mode-map (kbd "M-i")
+    (lambda()
+      (interactive)
+      (move-end-of-line 1)
+      (newline-and-indent)
+      (yank)))
+  ;; Third layer: Show the kill ring and insert the selected
+  ;; element. If `helm' is installed, use its corresponding function.
+  (define-key lightning-keymap-mode-map (kbd "C-M-i")
+    (lambda()
+      (interactive)
+      (if (assq 'helm-mode minor-mode-alist)
+	  (helm-show-kill-ring)
+	(browse-kill-ring))))
+  ;;
+  ;; Commenting
+  ;;
+  ;; First layer: Insert a comment at point. 
+  (define-key lightning-keymap-mode-map (kbd "C-'")
+    (lambda()
+      (interactive)
+      (insert comment-start)
+      (insert "  ")
+      (insert comment-end)
+      (left-char
+       (+ (string-width comment-end) 1))))
+  ;; Second layer: Toggle the commenting of either the current line or
+  ;; a marked region.
+  (define-key lightning-keymap-mode-map (kbd "M-'")
+    (lambda()
+      (interactive)
+      (if mark-active
+	  (comment-or-uncomment-region (region-beginning) (region-end))
+	(comment-or-uncomment-region (line-beginning-position)
+				     (line-end-position)))))
+  ;; Third layer: Toggle the commenting the current paragraph.
+  (define-key lightning-keymap-mode-map (kbd "C-M-'")
+    (lambda()
+      (interactive)
+      (save-excursion
+	(backward-paragraph)
+	(mark-paragraph)
+	(comment-or-uncomment-region (region-beginning)
+				     (region-end)))))
+  ;;
+  ;; Indenting
+  ;;
+  ;; First layer: Indent the current line or a marked region.
+  (define-key lightning-keymap-mode-map (kbd "C-p")
+    (lambda()
+      (interactive)
+      (save-excursion
+	(if mark-active
+	    (indent-region (region-beginning) (region-end))
+	  (indent-region (line-beginning-position)
+			 (line-end-position))))))
+  ;; Second layer: Indent the current paragraph or a marked region.
+  (define-key lightning-keymap-mode-map (kbd "M-p")
+    (lambda()
+      (interactive)
+      (save-excursion
+	(if mark-active
+	    (indent-region (region-beginning) (region-end))
+	  (progn
+	    (backward-paragraph)
+	    (mark-paragraph)
+	    (indent-region (region-beginning) (region-end)))))))
+  ;; Third layer: Indent the whole buffer.
+  (define-key lightning-keymap-mode-map (kbd "C-M-p")
+    (lambda ()
+      (interactive)
+      (save-excursion
+	(mark-whole-buffer)
+	(indent-region (region-beginning) (region-end)))))
+  ;;
+  ;; String replacement
+  ;; 
+  ;; First layer: Using the `iedit' package to change all parts of a
+  ;; buffer, matching a previously marked region, simultaneously.
+  (define-key lightning-keymap-mode-map (kbd "C-\\") 'iedit-mode)
+  ;; Second layer: Use the `replace-string' function
+  (define-key lightning-keymap-mode-map (kbd "M-\\") 'replace-string))
+;;; End of non-basic key bindings.
+
+;;;
 ;;; Mode-specific key bindings
-;; This section contains bindings for two distinct groups of mode.
-;; 1. Modes, which come with an inferior mode providing the user with
-;;    an interactive shell to manipulate their scripts etc. with.
-;;    In order to make the most out of those modes, the
-;;    `lightning-keymap-mode' provides mode-specific functions for
-;;    passing code from the major mode's buffer into its inferior
-;;    counterpart.
-;; 2. There are some minor modes interfering with the keymap provided by
-;;    this one. For now only the `yasnippet' mode came to mi attention.
-;;    If present, the keybindings imposed by those packages have to be
-;;    shadowed in order to ensure `lightning-keymap' will work properly.
+;;;
+;; This section contains bindings to deal with modes, which come with
+;; an inferior mode providing the user with an interactive shell to
+;; manipulate their scripts etc. with. In order to make the most out
+;; of these, the `lightning-keymap-mode' provides mode-specific
+;; functions for passing code from the major mode's buffer into its
+;; inferior counterpart.
 
-;; 1. Mode-specific evaluation functions
+;; Those features are not part of the basic version of the keymap.
 (unless lightning-keymap-basic
   ;; ESS (Emacs speaks statistics) - a very convenient mode for
   ;; manipulating R files.
@@ -321,7 +519,6 @@ for navigation (j, k, l, ;) and for newlines (m)."
     (add-hook
      'ess-mode-hook
      (lambda()
-       (local-set-key (kbd "M-j") 'left-word)
        (local-set-key (kbd "C-n")
 		      'lightning-keymap-ess-evaluation-layer-1)
        (local-set-key (kbd "<M-n>")
@@ -346,18 +543,14 @@ for navigation (j, k, l, ;) and for newlines (m)."
     (add-hook
      'python-mode-hook
      (lambda()
-       (local-set-key (kbd "M-j") 'left-word)
        (local-set-key (kbd "C-n")
 		      'lightning-keymap-python-evaluation-layer-1)
        (local-set-key (kbd "<M-n>")
 		      'lightning-keymap-python-evaluation-layer-2)
        (local-set-key (kbd "C-M-n")
 		      'lightning-keymap-python-evaluation-layer-3))))
-  ;; End of 1. Mode-specific evaluation functions
+  ;; End of mode-specific evaluation functions
   )
-
-;; 2. Shadowing other keybindings
-
 
 
 ;; Activating the customized keybindings with every major mode.
@@ -373,11 +566,43 @@ positive prefix argument turns on the mode.
 Negative prefix argument turns off the mode.
 
 Key bindings:
-\\{yas-minor-mode-map}"
+\\{lightning-keymap-mode}"
   :lighter " light"
   :group 'lightning
   :global t
-  :keymap lightning-keymap-mode-map)
+  :keymap lightning-keymap-mode-map
+
+  ;; There are some minor modes interfering with the keymap provided
+  ;; by this one. For now only the `flyspell', `yasnippet' and
+  ;; `isearch' mode came to my attention. If present, the key bindings
+  ;; imposed by those packages have to be shadowed in order to ensure
+  ;; `lightning-keymap' will work properly.
+  ;;
+  ;; Since `flyspell' uses overlays to introduce its key bindings, a
+  ;; mere change of order in the load path won't solve the problem.
+  ;; For now I see two different routes (both don't work yet)
+  ;;  1. Use overriding-local-map to override all minor-mode-maps and
+  ;;     overlays. But it's tricky since it also shadows important
+  ;;     keys.
+  ;;  2. Provide hooks to turn of the overlays and key bindings in all
+  ;;     interfering modes. But this is a tedious thing to do and it
+  ;;     won't ensure `lightning-keymap-mode' to work properly for
+  ;;     other users as well.
+
+  ;; My take on the first option:
+  ;;
+  ;; Let the package's keymap inherit from all other available maps so
+  ;; it will know about their bindings as well. But be careful to not
+  ;; let lightning-keymap-mode inherit its own map.
+  ;; (set-keymap-parent lightning-keymap-mode-map (current-local-map))
+  ;; (setq list-of-minor-mode-maps (current-minor-mode-maps))
+  ;; (when list-of-minor-mode-maps
+  ;;   (unless (equal lightning-keymap-mode-map
+  ;;     (car list-of-minor-mode-maps))
+  ;;     (set-keymap-parent lightning-keymap-mode-map
+  ;; 			 (car list-of-minor-mode-maps)))) 
+  ;; (setq overriding-local-map lightning-keymap-mode-map))
+  )
 
 (provide 'lightning-keymap-mode)
 ;;
