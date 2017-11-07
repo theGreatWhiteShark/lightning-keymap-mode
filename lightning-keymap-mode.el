@@ -372,11 +372,11 @@
 	(delete-forward-char 
 	 lightning-keymap-fifth-layer-delete-characters))))
   ;; Sixth layer: forward/backward delete paragraph
-  (define-key lightning-keymap-mode-map (kbd "C-M-,")
+  (define-key lightning-keymap-mode-map (kbd "C-M-<")
     (lambda()
       (interactive)
       (backward-kill-paragraph 1)))
-  (define-key lightning-keymap-mode-map (kbd "C-M-.")
+  (define-key lightning-keymap-mode-map (kbd "C-M->")
     (lambda()
       (interactive)
       (kill-paragraph 1)))
@@ -384,7 +384,7 @@
   ;; Copying
   ;;
   ;; First layer: Copy the current word or region
-  (define-key lightning-keymap-mode-map (kbd "C-o")
+  (define-key lightning-keymap-mode-map (kbd "C-p")
     (lambda()
       (interactive)
       (save-excursion
@@ -395,7 +395,7 @@
 	    (mark-word)
 	    (copy-region-as-kill (region-beginning) (region-end)))))))
   ;; Second layer: Copy the current line or region
-  (define-key lightning-keymap-mode-map (kbd "M-o")
+  (define-key lightning-keymap-mode-map (kbd "M-p")
     (lambda()
       (interactive)
       (save-excursion
@@ -404,7 +404,7 @@
 	  (copy-region-as-kill (line-beginning-position)
 			       (line-end-position))))))
   ;; Third layer: Copy the whole paragraph
-  (define-key lightning-keymap-mode-map (kbd "C-M-o")
+  (define-key lightning-keymap-mode-map (kbd "C-M-p")
     (lambda()
       (interactive)
       (save-excursion
@@ -415,9 +415,9 @@
   ;; Yanking
   ;;
   ;; First layer: Yank the last element of the kill-ring
-  (define-key lightning-keymap-mode-map (kbd "C-i") 'yank)
+  (define-key lightning-keymap-mode-map (kbd "C-o") 'yank)
   ;; Second layer: Yank the last element of the kill-ring in a newline
-  (define-key lightning-keymap-mode-map (kbd "M-i")
+  (define-key lightning-keymap-mode-map (kbd "M-o")
     (lambda()
       (interactive)
       (move-end-of-line 1)
@@ -425,7 +425,7 @@
       (yank)))
   ;; Third layer: Show the kill ring and insert the selected
   ;; element. If `helm' is installed, use its corresponding function.
-  (define-key lightning-keymap-mode-map (kbd "C-M-i")
+  (define-key lightning-keymap-mode-map (kbd "C-M-o")
     (lambda()
       (interactive)
       (if (assq 'helm-mode minor-mode-alist)
@@ -465,16 +465,11 @@
   ;; Indenting
   ;;
   ;; First layer: Indent the current line or a marked region.
-  (define-key lightning-keymap-mode-map (kbd "C-p")
-    (lambda()
-      (interactive)
-      (save-excursion
-	(if mark-active
-	    (indent-region (region-beginning) (region-end))
-	  (indent-region (line-beginning-position)
-			 (line-end-position))))))
+  ;; Emacs seems to automatically map C-i to TAB. Since this is
+  ;; already the behaviour we want, let's keep it. Alternatively:
+  ;; https://superuser.com/questions/424533/emacs-rebind-c-i-while-keeping-tab-bindings
   ;; Second layer: Indent the current paragraph or a marked region.
-  (define-key lightning-keymap-mode-map (kbd "M-p")
+  (define-key lightning-keymap-mode-map (kbd "M-i")
     (lambda()
       (interactive)
       (save-excursion
@@ -485,7 +480,7 @@
 	    (mark-paragraph)
 	    (indent-region (region-beginning) (region-end)))))))
   ;; Third layer: Indent the whole buffer.
-  (define-key lightning-keymap-mode-map (kbd "C-M-p")
+  (define-key lightning-keymap-mode-map (kbd "C-M-i")
     (lambda ()
       (interactive)
       (save-excursion
