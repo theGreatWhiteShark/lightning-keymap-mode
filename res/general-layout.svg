@@ -4103,9 +4103,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.70710678"
-     inkscape:cx="421.69002"
-     inkscape:cy="735.51476"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="488.58313"
+     inkscape:cy="682.68176"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -4123,7 +4123,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -4174,7 +4174,7 @@
          inkscape:export-xdpi="300"
          inkscape:export-ydpi="300" />
       <rect
-         style="fill:#000080;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         style="fill:#cd5c5c;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
          id="rect4621"
          rx="4.7705998"
          ry="4.0114999"
@@ -4187,7 +4187,7 @@
          inkscape:export-xdpi="300"
          inkscape:export-ydpi="300" />
       <rect
-         style="fill:#000080;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;fill-opacity:1"
+         style="fill:#cd5c5c;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;fill-opacity:1"
          id="rect4643"
          rx="4.7705998"
          ry="4.0114999"
@@ -4200,7 +4200,7 @@
          inkscape:export-xdpi="300"
          inkscape:export-ydpi="300" />
       <rect
-         style="fill:#000080;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;fill-opacity:1"
+         style="fill:#cd5c5c;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;fill-opacity:1"
          id="rect4665"
          rx="4.7705998"
          ry="4.0114999"
@@ -4213,7 +4213,7 @@
          inkscape:export-xdpi="300"
          inkscape:export-ydpi="300" />
       <rect
-         style="fill:#000080;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;fill-opacity:1"
+         style="fill:#cd5c5c;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;fill-opacity:1"
          id="rect4687"
          rx="4.7705998"
          ry="4.0114999"
@@ -4275,7 +4275,7 @@
          inkscape:export-xdpi="300"
          inkscape:export-ydpi="300" />
       <rect
-         style="fill:#000080;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
+         style="fill:#cd5c5c;stroke:#000000;stroke-width:1.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0"
          id="rect5003"
          rx="4.7705998"
          ry="4.0114999"
@@ -4438,12 +4438,12 @@
            id="tspan23347"
            x="505.82535"
            y="376.40997"
-           style="font-size:12px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff">move </tspan><tspan
+           style="font-size:12px;text-align:center;line-height:110.00000237999999797%;text-anchor:middle;fill:#fffafa">move </tspan><tspan
            sodipodi:role="line"
            x="503.91519"
            y="389.60999"
            id="tspan23349"
-           style="font-size:12px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff">left</tspan></text>
+           style="font-size:12px;text-align:center;line-height:110.00000237999999797%;text-anchor:middle;fill:#fffafa">left</tspan></text>
       <text
          sodipodi:linespacing="100%"
          id="text3302"
@@ -4712,12 +4712,12 @@
            id="tspan23347-2"
            x="561.33081"
            y="376.4314"
-           style="font-size:12px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff">move </tspan><tspan
+           style="font-size:12px;text-align:center;line-height:110.00000237999999797%;text-anchor:middle;fill:#fffafa">move </tspan><tspan
            sodipodi:role="line"
            x="559.42065"
            y="389.63141"
            id="tspan23349-0"
-           style="font-size:12px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff">down</tspan></text>
+           style="font-size:12px;text-align:center;line-height:110.00000237999999797%;text-anchor:middle;fill:#fffafa">down</tspan></text>
       <text
          xml:space="preserve"
          style="font-size:12px;font-style:normal;font-weight:normal;line-height:110.00000238%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -4732,12 +4732,12 @@
            id="tspan23347-1"
            x="617.37067"
            y="376.43399"
-           style="font-size:12px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff">move </tspan><tspan
+           style="font-size:12px;text-align:center;line-height:110.00000237999999797%;text-anchor:middle;fill:#fffafa">move </tspan><tspan
            sodipodi:role="line"
            x="615.46051"
            y="389.634"
            id="tspan23349-5"
-           style="font-size:12px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff">up</tspan></text>
+           style="font-size:12px;text-align:center;line-height:110.00000237999999797%;text-anchor:middle;fill:#fffafa">up</tspan></text>
       <text
          xml:space="preserve"
          style="font-size:12px;font-style:normal;font-weight:normal;line-height:110.00000238%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -4752,12 +4752,12 @@
            id="tspan23347-4"
            x="672.88324"
            y="376.44296"
-           style="font-size:12px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff">move </tspan><tspan
+           style="font-size:12px;text-align:center;line-height:110.00000237999999797%;text-anchor:middle;fill:#fffafa">move </tspan><tspan
            sodipodi:role="line"
            x="670.97308"
            y="389.64297"
            id="tspan23349-7"
-           style="font-size:12px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff">right</tspan></text>
+           style="font-size:12px;text-align:center;line-height:110.00000237999999797%;text-anchor:middle;fill:#fffafa">right</tspan></text>
       <text
          xml:space="preserve"
          style="font-size:12px;font-style:normal;font-weight:normal;line-height:110.00000238%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -4881,12 +4881,12 @@
            id="tspan23347-689"
            x="532.28583"
            y="434.5224"
-           style="font-size:12px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff">move </tspan><tspan
+           style="font-size:12px;text-align:center;line-height:110.00000237999999797%;text-anchor:middle;fill:#fffafa">move </tspan><tspan
            sodipodi:role="line"
            x="530.37567"
            y="447.72241"
            id="tspan23349-26"
-           style="font-size:12px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff">left</tspan></text>
+           style="font-size:12px;text-align:center;line-height:110.00000237999999797%;text-anchor:middle;fill:#fffafa">left</tspan></text>
       <text
          xml:space="preserve"
          style="font-size:12px;font-style:normal;font-weight:normal;line-height:110.00000238%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -4936,6 +4936,48 @@
            y="448.20825"
            style="font-size:11px;text-align:center;line-height:110.00000238%;text-anchor:middle;fill:#f0f8ff"
            id="tspan24478">wards</tspan></text>
+      <rect
+         style="fill:#cd5c5c;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-opacity:1"
+         id="rect4320"
+         width="33"
+         height="16.5"
+         x="667.117"
+         y="405.33813"
+         rx="4.7705998"
+         ry="0" />
+      <rect
+         style="fill:#6495ed;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-opacity:1"
+         id="rect4320-3"
+         width="33"
+         height="16.5"
+         x="668.00085"
+         y="430.11847"
+         rx="4.7705998"
+         ry="0" />
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="702.9032"
+         y="418.45425"
+         id="text4340"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4342"
+           x="702.9032"
+           y="418.45425"
+           style="font-size:14px">basic layout</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="703.17273"
+         y="443.31287"
+         id="text4340-6"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan4342-7"
+           x="703.17273"
+           y="443.31287"
+           style="font-size:14px">advanced layout</tspan></text>
     </g>
   </g>
 </svg>
