@@ -35,56 +35,67 @@
 ;;
 ;;  Most important variables:
 ;;
-;;    `lightning-keymap-toggle-key'
+;;    `lightning-toggle-key'
 ;;
 ;;      A key-sequence specifying a global binding toggling the lightning
 ;;      keymap. To prevent this minor mode from setting the global
 ;;      key binding, you can initialize the variable with nil.
 ;;      Default: "<F5>".
 ;;
-;;    `lightning-keymap-basic'
+;;    `lightning-basic-keymap'
 ;;
 ;;      If set to non-nil, all bindings of the lightning-keymap-mode
 ;;      will be activated. Setting it to `t' instead will only bind
 ;;      the keys used for navigation (j, k, l, ;) and for line breaks
 ;;      (m). Default: nil.
 ;;
+;;  The ordering of the layers of navigation is as follows:
+;;    1. `C-' - simple commands
+;;    2. `M-' - commands acting on bigger entities (words instead of
+;;          characters, paragraphs instead of lines)
+;;    3. `C-M-' - commands acting on even bigger entities (whole lines
+;;          instead of words, the whole buffer instead of paragraphs)
+;;    4. `M-S-' - for the navigation between buffers and special
+;;          versions of commands.
+;;    5. `C-S-' - speed up the first layer.
+;;    6. `C-M-S-' - speed up the fifth layer.
+;;
 ;;  Additional variables to customize the navigation speed:
 ;;  
-;;    `lightning-keymap-fifth-layer-jump-characters'
+;;    `lightning-jump-chars-fast'
 ;;
 ;;      Number of characters to jump in the fifth, more faster,
 ;;      of navigation. This constant will affect the left and right
 ;;      navigation using `C-S-j' and `C-:'. Default = 3.
 ;;
-;;    `lightning-keymap-fifth-layer-jump-lines'
+;;    `lightning-jump-lines-fast'
 ;;
 ;;      Number of lines to jump in the fifth, more faster, layer of
 ;;      navigation. This constant will affect the up and down
 ;;      navigation using `C-S-l' and `C-S-k'. Default = 4.
 ;;
-;;    `lightning-keymap-sixth-layer-jump-characters'
+;;    `lightning-jump-chars-faster'
 ;;
 ;;      Number of characters to jump in the sixth, even more faster,
 ;;      layer of navigation. This constant will affect the left and
 ;;      right navigation using `C-M-S-j' and `C-M-:'. Default = 15. 
 ;;
-;;    `lightning-keymap-sixth-layer-jump-lines'
+;;    `lightning-jump-lines-faster'
 ;;    
 ;;      Number of lines to jump in the sixth, even more faster, layer
 ;;      of navigation. This constant will affect the up and down
 ;;      navigation using `C-M-S-l' and `C-M-S-k'. Default = 30. 
 ;;
-;;    `lightning-keymap-fourth-layer-delete-words'
+;;    `lightning-delete-words-fast'
 ;;
 ;;      Number of words to delete either forward or backward in the
-;;      fourth layer. This constant will be bound to `C-S-.' and
+;;      fifth layer. This constant will be bound to `C-S-.' and
 ;;      `C-S-,'. Default = 5. 
 ;;
-;;    `lightning-keymap-fifth-layer-delete-characters'
+;;    `lightning-delete-chars-fast'
 ;;
 ;;      Number of characters to delete either forward or backward in
-;;      the fourth layer. This constant will be bound to `C-S-.' and
+;;      the fifth layer. This constant will be bound to `C-S-.' and
 ;;      `C-S-,'. Default = 5.
 ;;
 ;;  For more information check out the projects Github page:
@@ -106,7 +117,7 @@
   :prefix "lightning-"
   :group 'editing)
 
-(defcustom lightning-keymap-toggle-key "<f5>"
+(defcustom lightning-toggle-key "<f5>"
   "Sets a global key binding to toggle the
   `lightning-keymap-mode'. The input has to be a string and a valid
   argument for the `kbd' function (e.g. \"C-M-a\" or \"<f5>\").
@@ -115,61 +126,61 @@
   :group 'lightning
   :type 'string)
 
-(defcustom lightning-keymap-basic nil
+(defcustom lightning-basic-keymap nil
   "If set to non-nil, all bindings of the lightning-keymap-mode will
   be activated. Setting it to `t' instead will only bind the keys used
   for navigation (j, k, l, ;) and for line breaks (m). Default: nil."
   :group 'lightning
   :type 'boolean)
 
-(defcustom lightning-keymap-fifth-layer-jump-characters 3
+(defcustom lightning-jump-chars-fast 3
   "Number of characters to jump in the fifth, more faster, layer of
   navigation. This constant will affect the left and right navigation
   using `C-S-j' and `C-:'. Default = 3."
   :group 'lightning
   :type 'integer)
 
-(defcustom lightning-keymap-fifth-layer-jump-lines 4
+(defcustom lightning-jump-lines-fast 4
   "Number of lines to jump in the fifth, more faster, layer of
   navigation. This constant will affect the up and down navigation
   using `C-S-l' and `C-S-k'. Default = 4."
   :group 'lightning
   :type 'integer)
 
-(defcustom lightning-keymap-sixth-layer-jump-characters 15
+(defcustom lightning-jump-chars-faster 15
   "Number of characters to jump in the sixth, even more faster, layer of
   navigation. This constant will affect the left and right navigation
   using `C-M-S-j' and `C-M-:'. Default = 15."
   :group 'lightning
   :type 'integer)
 
-(defcustom lightning-keymap-sixth-layer-jump-lines 30
+(defcustom lightning-jump-lines-faster 30
   "Number of lines to jump in the sixth, even more faster, layer of
   navigation. This constant will affect the up and down navigation
   using `C-M-S-l' and `C-M-S-k'. Default = 30."
   :group 'lightning
   :type 'integer)
 
-(defcustom lightning-keymap-fourth-layer-delete-words 5
+(defcustom lightning-delete-words-fast 5
   "Number of words to delete either forward or backward in the
-  fourth layer. This constant will be bound to `C-S-.' and
+  fifth layer. This constant will be bound to `C-S-.' and
   `C-S-,'. Default = 5."
   :group 'lightning
   :type 'interger)
 
-(defcustom lightning-keymap-fifth-layer-delete-characters 5
+(defcustom lightning-delete-chars-fast 5
   "Number of characters to delete either forward or backward in the
-  fourth layer. This constant will be bound to `C-S-.' and
+  fifth layer. This constant will be bound to `C-S-.' and
   `C-S-,'. Default = 5."
   :group 'lightning
   :type 'interger)
 
 
 ;; Defining a global key to toggle the lightning-keymap (unless the
-;; lightning-keymap-toggle-key wasn't set to nil).
+;; lightning-toggle-key wasn't set to nil).
 ;; It has to be a global one, because it has to be still available
 ;; when the lightning-keymap-mode is disabled.
-(global-set-key (kbd lightning-keymap-toggle-key)
+(global-set-key (kbd lightning-toggle-key)
 		'lightning-keymap-mode)
 
 ;; Basic version of the keymap featuring only simple navigation,
@@ -204,57 +215,57 @@
       (lambda()
 	(interactive)
 	(setq count 0)
-	(while (< count lightning-keymap-fifth-layer-jump-characters)
+	(while (< count lightning-jump-chars-fast)
 	  (left-char)
 	  (setq count (+ count 1)))))
     (define-key map (kbd "C-:")
       (lambda()
 	(interactive)
 	(setq count 0)
-	(while (< count lightning-keymap-fifth-layer-jump-characters)
+	(while (< count lightning-jump-chars-fast)
 	  (right-char)
 	  (setq count (+ count 1)))))
     (define-key map (kbd "C-S-l")
       (lambda()
 	(interactive)
 	(setq count 0)
-	(while (< count lightning-keymap-fifth-layer-jump-lines)
+	(while (< count lightning-jump-lines-fast)
 	  (previous-line)
 	  (setq count (+ count 1)))))
     (define-key map (kbd "C-S-k")
       (lambda()
 	(interactive)
 	(setq count 0)
-	(while (< count lightning-keymap-fifth-layer-jump-lines)
+	(while (< count lightning-jump-lines-fast)
 	  (next-line)
 	  (setq count (+ count 1)))))
-    ;; Sixth layer: even faster scrolling than in the second layer
+    ;; Sixth layer: even faster scrolling than in the fifth layer
     (define-key map (kbd "C-M-S-j")
       (lambda()
 	(interactive)
 	(setq count 0)
-	(while (< count lightning-keymap-sixth-layer-jump-characters)
+	(while (< count lightning-jump-chars-faster)
 	  (left-char)
 	  (setq count (+ count 1)))))
     (define-key map (kbd "C-M-:")
       (lambda()
 	(interactive)
 	(setq count 0)
-	(while (< count lightning-keymap-sixth-layer-jump-characters)
+	(while (< count lightning-jump-chars-faster)
 	  (right-char)
 	  (setq count (+ count 1)))))
     (define-key map (kbd "C-M-S-l")
       (lambda()
 	(interactive)
 	(setq count 0)
-	(while (< count lightning-keymap-sixth-layer-jump-lines)
+	(while (< count lightning-jump-lines-faster)
 	  (previous-line)
 	  (setq count (+ count 1)))))
     (define-key map (kbd "C-M-S-k")
       (lambda()
 	(interactive)
 	(setq count 0)
-	(while (< count lightning-keymap-sixth-layer-jump-lines)
+	(while (< count lightning-jump-lines-faster)
 	  (next-line)
 	  (setq count (+ count 1)))))
     ;; Alternative one could use the following functions to jump
@@ -307,7 +318,7 @@
 ;;;
 ;; This adds several additional bindings for killing, yanking,
 ;; indenting, commenting, and string replacement
-(unless lightning-keymap-basic
+(unless lightning-basic-keymap
   ;;
   ;; Killing
   ;;
@@ -348,13 +359,13 @@
       (if mark-active
 	  (kill-region (region-beginning) (region-end))
 	(backward-kill-word
-	 lightning-keymap-fourth-layer-delete-words))))
+	 lightning-delete-words-fast))))
   (define-key lightning-keymap-mode-map (kbd "M->")
     (lambda()
       (interactive)
       (if mark-active
 	  (kill-region (region-beginning) (region-end))
-	(kill-word lightning-keymap-fourth-layer-delete-words))))
+	(kill-word lightning-delete-words-fast))))
   ;; Fifth layer: delete forward or backward multiple characters or
   ;; region. 
   (define-key lightning-keymap-mode-map (kbd "C-<")
@@ -363,14 +374,14 @@
       (if mark-active
 	  (kill-region (region-beginning) (region-end))
 	(backward-delete-char-untabify
-	 lightning-keymap-fifth-layer-delete-characters))))
+	 lightning-delete-chars-fast))))
   (define-key lightning-keymap-mode-map (kbd "C->")
     (lambda()
       (interactive)
       (if mark-active
 	  (kill-region (region-beginning) (region-end))
 	(delete-forward-char 
-	 lightning-keymap-fifth-layer-delete-characters))))
+	 lightning-delete-chars-fast))))
   ;; Sixth layer: forward/backward delete paragraph
   (define-key lightning-keymap-mode-map (kbd "C-M-<")
     (lambda()
@@ -507,7 +518,7 @@
 ;; inferior counterpart.
 
 ;; Those features are not part of the basic version of the keymap.
-(unless lightning-keymap-basic
+(unless lightning-basic-keymap
   ;; ESS (Emacs speaks statistics) - a very convenient mode for
   ;; manipulating R files.
   (when (assq 'ess package-alist)
