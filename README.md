@@ -1,3 +1,5 @@
+![general-key-layout](res/general-layout.png)
+
 This minor mode intends to provide a more fast handling of Emacs
 during actual file editing.
 
