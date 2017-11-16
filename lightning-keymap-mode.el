@@ -500,11 +500,21 @@
   ;;
   ;; String replacement
   ;; 
-  ;; First layer: Using the `iedit' package to change all parts of a
+  ;; First layer: Use the `replace-string' function on the current line
+  (define-key lightning-keymap-mode-map (kbd "C-\\")
+    (lambda()
+      (interactive)
+      (save-excursion
+	(if mark-active (call-interactively 'replace-string)
+	  (progn
+	    (set-mark (line-end-position))
+	    (move-beginning-of-line 1)
+	    (call-interactively 'replace-string))))))
+  ;; Second layer: Use the `replace-string' function on the whole buffer
+  (define-key lightning-keymap-mode-map (kbd "M-\\") 'replace-string)
+  ;; Third layer: Using the `iedit' package to change all parts of a
   ;; buffer, matching a previously marked region, simultaneously.
-  (define-key lightning-keymap-mode-map (kbd "C-\\") 'iedit-mode)
-  ;; Second layer: Use the `replace-string' function
-  (define-key lightning-keymap-mode-map (kbd "M-\\") 'replace-string))
+  (define-key lightning-keymap-mode-map (kbd "C-M-\\") 'iedit-mode))
 ;;; End of non-basic key bindings.
 
 ;;;
