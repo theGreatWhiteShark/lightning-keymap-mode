@@ -17,6 +17,8 @@ worlds?
 
 # Usage
 
+![cheatsheet](res/cheatsheet.png)
+
 In **lightning-keymap-mode** a keymap tailored for fast navigation and
 editing is superimposed on top of your regular keymaps using a *minor
 mode*. Since this might shadow some essential key bindings you use on
@@ -43,6 +45,9 @@ bindings: *Ctrl + ,* deletes backwards a character, *Meta + ,* deletes
 backwards a word, and *Ctrl + Meta + ,* deletes the current line
 (apart from this, those commands are also sensitive towards marked
 regions). 
+
+The evaluation functions bound to the **m** key are currently just
+supported for **ESS** and **python-mode**.
 
 For additional information and customization please refer to the
 [customization](https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Easy-Customization)
@@ -71,8 +76,6 @@ folder.
 
 # TODO
 
-- I'm in the process of creating a cheatsheet, which will give an
-  overview about the different key bindings and their functions. 
 - Some minor modes, like **flyspell** or **isearch**, add their own
   key bindings on top of the active keymap using
   [overlays](https://www.gnu.org/software/emacs/manual/html_node/elisp/Active-Keymaps.html#Active-Keymaps). These
