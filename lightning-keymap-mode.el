@@ -400,7 +400,7 @@
       (interactive)
       (save-excursion
 	(if mark-active
-	    (kill-region (region-beginning) (region-end))
+	    (copy-region-as-kill (region-beginning) (region-end))
 	  (progn
 	    (left-word)
 	    (mark-word)
