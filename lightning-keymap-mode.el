@@ -1,112 +1,4 @@
-;;; lightning-keymap-mode.el - A lightning-fast keymap for Emacs.
 
-;; Author: Philipp Müller <thetruephil@googlemail.com>
-;; Maintainer: Philipp Müller <thetruephil@googlemail.com>
-;; Version: 0.1.0
-;; Created: October 19, 2017
-;; X-URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
-;; URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
-;; Keywords: keymap, navigation
-;; Package-Requires: ((iedit 0.97))
-;; Compatibility: GNU Emacs: >21.x
-
-;; This program is free software: you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation, either version 3 of the License, or
-;; (at your option) any later version.
-
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;; Commentary:
-
-;; In order to use the lightning-keymap-mode you have to add the
-;; following lines to your `.emacs' file.
-;;
-;;    (add-to-list 'load-path "~/PATH-TO-LIGHTNING-KEYMAP-MODE")
-;;    (require 'lightning-keymap-mode)
-;;    (lightning-keymap-mode 1)
-;;
-;;
-;;  Most important variables:
-;;
-;;    `lightning-toggle-key'
-;;
-;;      A key-sequence specifying a global binding toggling the lightning
-;;      keymap. To prevent this minor mode from setting the global
-;;      key binding, you can initialize the variable with nil.
-;;      Default: "<F5>".
-;;
-;;    `lightning-basic-keymap'
-;;
-;;      If set to non-nil, all bindings of the lightning-keymap-mode
-;;      will be activated. Setting it to `t' instead will only bind
-;;      the keys used for navigation (j, k, l, ;) and for line breaks
-;;      (m). Default: nil.
-;;
-;;  The ordering of the layers of navigation is as follows:
-;;    1. `C-' - simple commands
-;;    2. `M-' - commands acting on bigger entities (words instead of
-;;          characters, paragraphs instead of lines)
-;;    3. `C-M-' - commands acting on even bigger entities (whole lines
-;;          instead of words, the whole buffer instead of paragraphs)
-;;    4. `M-S-' - for the navigation between buffers and special
-;;          versions of commands.
-;;    5. `C-S-' - speed up the first layer.
-;;    6. `C-M-S-' - speed up the fifth layer.
-;;
-;;  Additional variables to customize the navigation speed:
-;;  
-;;    `lightning-jump-chars-fast'
-;;
-;;      Number of characters to jump in the fifth, more faster,
-;;      of navigation. This constant will affect the left and right
-;;      navigation using `C-S-j' and `C-:'. Default = 3.
-;;
-;;    `lightning-jump-lines-fast'
-;;
-;;      Number of lines to jump in the fifth, more faster, layer of
-;;      navigation. This constant will affect the up and down
-;;      navigation using `C-S-l' and `C-S-k'. Default = 4.
-;;
-;;    `lightning-jump-chars-faster'
-;;
-;;      Number of characters to jump in the sixth, even more faster,
-;;      layer of navigation. This constant will affect the left and
-;;      right navigation using `C-M-S-j' and `C-M-:'. Default = 15. 
-;;
-;;    `lightning-jump-lines-faster'
-;;    
-;;      Number of lines to jump in the sixth, even more faster, layer
-;;      of navigation. This constant will affect the up and down
-;;      navigation using `C-M-S-l' and `C-M-S-k'. Default = 30. 
-;;
-;;    `lightning-delete-words-fast'
-;;
-;;      Number of words to delete either forward or backward in the
-;;      fifth layer. This constant will be bound to `C-S-.' and
-;;      `C-S-,'. Default = 5. 
-;;
-;;    `lightning-delete-chars-fast'
-;;
-;;      Number of characters to delete either forward or backward in
-;;      the fifth layer. This constant will be bound to `C-S-.' and
-;;      `C-S-,'. Default = 5.
-;;
-;;  For more information check out the projects Github page:
-;;  https://github.com/theGreatWhiteShark/lightning-keymap-mode
-
-(require 'lightning-keymap-mode-modes)
-
-;; For a more convenient ways of moving between buffers.
-(require 'windmove)
-;; Interactive edit to manipulate multiple identical words at the time
-(require 'iedit)
 ;; Rectangle marking for manipulating multiple lines simultaneously.
 (require 'rect-mark)
 
@@ -580,16 +472,24 @@
 (defvar lightning-keymap-mode-map
   (lightning-keymap-mode-get-keymap))
 
-(defun lighnting-keymap-mode-after-change-major-mode-function ()
+(defun lightning-keymap-mode-after-change-major-mode-function ()
   
-  ;;
+  (setq debugging 1)
   ;; Let the package's keymap inherit from all other available maps so
-  ;; it will know about their bindings as well. But be careful to not
-  ;; let lightning-keymap-mode inherit its own map.
+  ;; it will know about their bindings as well.
+
+  ;; Some general debugging information
+  (if (equal debugging 1)
+      (progn
+	(message "\nName of the current buffer: %s"
+		 (current-buffer))
+	(message "\nCurrent mayor mode: %s" major-mode)
+	(message "\nCurrent activated minor modes: %S"
+		 minor-mode-alist)))
 
   ;; Get a list of all active minor modes. But careful! The map of
-  ;; lightning-keymap-mode must not be present. Else the code will
-  ;; break.
+  ;; lightning-keymap-mode must not be present. Else it tries to
+  ;; inherit from itself, what will break the code.
   (setq list-of-all-active-maps)
   (setq list-of-all-active-minor-mode-maps (current-minor-mode-maps))
   ;; Add them in the original order.
@@ -603,18 +503,39 @@
   		       list-of-all-active-minor-mode-maps)
   		  list-of-all-active-maps))
       (setq int-iterator (- int-iterator 1))))
+  
+  (if (equal debugging 1)
+      (progn
+	(message "\nnumber of the current minor mode maps")
+	(message "\n%d" (length (current-minor-mode-maps)))
+	(message "\nminor modes which will be used for inheritance)")
+	(message "\n%S" list-of-all-active-maps)))
 
   ;; Add the current major mode map last
   (setq list-of-all-active-maps
-  	(cons (current-local-map) list-of-all-active-maps))
+  	(cons list-of-all-active-maps (current-local-map)))
+  
+  (if (equal debugging 1)
+      (progn
+	(message "\n(current-local-map)")
+	(message "\n%S" (current-local-map))))
 
   ;; Use the set of all active keymaps as the parent map for
   ;; `lightning-keymap-mode'. This way all key bindings not mapped in
   ;; this file will be looked up in the other keymaps.
-  (set-keymap-parent
-   (lightning-keymap-mode-get-keymap)
-   (make-composed-keymap list-of-all-active-maps))
+  (if (string= major-mode "minibuffer-inactive-mode")
+      (message "list-of-all-active-maps was not set as the keymap
+parent, since the buffer is in minibuffer-inactive-mode")
+    (progn
+      (set-keymap-parent
+       (lightning-keymap-mode-get-keymap)
+       (make-composed-keymap list-of-all-active-maps))))
 
+  (if (equal debugging 1)
+      (progn
+	(message "\nlightning-keymap-mode-map used to overwrite the local map")
+	(message "\n%S" lightning-keymap-mode-map)
+	(message "\noverriding-local-map was set and returned")))
   (setq overriding-local-map lightning-keymap-mode-map)
   overriding-local-map
   )
@@ -657,9 +578,18 @@ Key bindings:
   ;;     other users as well.
 
   ;; My take on the first option:
+  ;; This mode-hook can not be used. It is only triggered creating a
+  ;; buffer (?in a NEW major-mode?), but not when changing between
+  ;; buffers. Therefore the map is not changed back to its previous
+  ;; state and this is bad.
+  ;; In addition not the actual major more, like fundamental, helm
+  ;; ... is detected, but one called minibugffer-inactive-mode
+  ;; instead. This one provides almost no bindings and messes things
+  ;; up.
+  ;; It's better to trigger the changes when switching between buffers.
   ;; (add-hook 'after-change-major-mode-hook
-  ;; 	    'lighnting-keymap-mode-after-change-major-mode-function)
-  )
+  ;; 	    'lightning-keymap-mode-after-change-major-mode-function)
+  ;; )
 
 (provide 'lightning-keymap-mode)
 ;;
