@@ -75,6 +75,9 @@
 (global-set-key (kbd lightning-toggle-key)
 		'lightning-keymap-mode)
 
+;; Active debugging messages by setting this variable non-nil.
+(setq lightning-debugging nil)
+
 ;; This function creates the keymap of `lightning-keymap-mode'. It's
 ;; used in the hooks and for initialization to create fresh
 ;; representations of the underlying keymaps (with no additional minor
@@ -474,12 +477,11 @@
 
 (defun lightning-keymap-mode-after-change-major-mode-function ()
   
-  (setq debugging 1)
   ;; Let the package's keymap inherit from all other available maps so
   ;; it will know about their bindings as well.
 
-  ;; Some general debugging information
-  (if (equal debugging 1)
+  ;; Some general lightning-debugging information
+  (if lightning-debugging
       (progn
 	(message "\nName of the current buffer: %s"
 		 (current-buffer))
@@ -504,7 +506,7 @@
   		  list-of-all-active-maps))
       (setq int-iterator (- int-iterator 1))))
   
-  (if (equal debugging 1)
+  (if lightning-debugging
       (progn
 	(message "\nnumber of the current minor mode maps")
 	(message "\n%d" (length (current-minor-mode-maps)))
@@ -515,7 +517,7 @@
   (setq list-of-all-active-maps
   	(cons list-of-all-active-maps (current-local-map)))
   
-  (if (equal debugging 1)
+  (if lightning-debugging
       (progn
 	(message "\n(current-local-map)")
 	(message "\n%S" (current-local-map))))
@@ -524,14 +526,16 @@
   ;; `lightning-keymap-mode'. This way all key bindings not mapped in
   ;; this file will be looked up in the other keymaps.
   (if (string= major-mode "minibuffer-inactive-mode")
-      (message "list-of-all-active-maps was not set as the keymap
-parent, since the buffer is in minibuffer-inactive-mode")
+      (progn
+	(if lightning-debugging 
+	    (message "list-of-all-active-maps was not set as the keymap
+parent, since the buffer is in minibuffer-inactive-mode")))
     (progn
       (set-keymap-parent
        (lightning-keymap-mode-get-keymap)
        (make-composed-keymap list-of-all-active-maps))))
 
-  (if (equal debugging 1)
+  (if lightning-debugging
       (progn
 	(message "\nlightning-keymap-mode-map used to overwrite the local map")
 	(message "\n%S" lightning-keymap-mode-map)
@@ -583,13 +587,13 @@ Key bindings:
   ;; buffers. Therefore the map is not changed back to its previous
   ;; state and this is bad.
   ;; In addition not the actual major more, like fundamental, helm
-  ;; ... is detected, but one called minibugffer-inactive-mode
+  ;; ... is detected, but one called `minibuffer-inactive-mode'
   ;; instead. This one provides almost no bindings and messes things
   ;; up.
   ;; It's better to trigger the changes when switching between buffers.
-  ;; (add-hook 'after-change-major-mode-hook
-  ;; 	    'lightning-keymap-mode-after-change-major-mode-function)
-  ;; )
+  (add-hook 'post-command-hook
+  	    'lightning-keymap-mode-after-change-major-mode-function)
+  )
 
 (provide 'lightning-keymap-mode)
 ;;
