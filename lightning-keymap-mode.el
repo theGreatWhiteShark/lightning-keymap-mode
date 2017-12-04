@@ -98,6 +98,19 @@
 ;;      the fifth layer. This constant will be bound to `C-S-.' and
 ;;      `C-S-,'. Default = 5.
 ;;
+;;  Further internal or debugging variables and functions:
+;;
+;;    `lightning-debugging'
+;;
+;;      If set to a value other than nil this variable triggers the
+;;      display of various debugging messages using the `message'
+;;      function.
+;;
+;;    `lightning-find-active-minor-modes'
+;;      A convenience function returning a list of all active minor
+;;      modes in the current buffer.
+;;
+;;
 ;;  For more information check out the projects Github page:
 ;;  https://github.com/theGreatWhiteShark/lightning-keymap-mode
 
@@ -667,11 +680,16 @@
     (if (string= major-mode "minibuffer-inactive-mode")
 	(progn
 	  (if lightning-debugging 
-	      (message "list-of-all-active-maps was not set as the keymap
-parent, since the buffer is in minibuffer-inactive-mode")))
+	      (message "\nSince the buffer was a minibuffer the
+lightning-keymap was appended and no inheritance was set."))
+	  (setq lightning-key-mode-map
+		(cons list-of-all-active-maps
+		      (lightning-keymap-mode-get-keymap))))
       (progn
+	(setq lightning-keymap-mode
+	      (lightning-keymap-mode-get-keymap)) 
 	(set-keymap-parent
-	 (lightning-keymap-mode-get-keymap)
+	 lightning-keymap-mode
 	 (make-composed-keymap list-of-all-active-maps))))
 
     (if lightning-debugging
