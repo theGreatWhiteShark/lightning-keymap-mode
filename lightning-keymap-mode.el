@@ -184,6 +184,19 @@
 ;; Active debugging messages by setting this variable non-nil.
 (setq lightning-debugging nil)
 
+;; A convenience function returning a list of all active minor modes
+;; in the current buffer.
+(defun lightning-find-active-minor-modes ()
+  (let (minor-mode-list-active)
+    (dolist (minor-mode minor-mode-list minor-mode-list-active)
+      (when (and (boundp minor-mode) (symbolp minor-mode))
+	;; As a sanity check, test whether the element of
+	;; minor-mode-list is defined and a symbol.
+	(if (symbol-value minor-mode)
+	    (setq minor-mode-list-active
+		  (cons minor-mode minor-mode-list-active))))
+      minor-mode-list-active)))
+
 ;; After each function evaluation the
 ;; `lightning-keymap-post-command-function' function is called to set
 ;; up a new `overriding-local-map' variable containing the local
@@ -194,7 +207,8 @@
 ;; every function evaluation the content of this variable is checked
 ;; first and only if there are changes the `overriding-local-map' will
 ;; be reset.
-(setq lightning-mode-list (list major-mode minor-mode-alist))
+(setq lightning-mode-list
+      (list major-mode (lightning-find-active-minor-modes)))
 
 ;; This function creates the keymap of `lightning-keymap-mode'. It's
 ;; used in the hooks and for initialization to create fresh
@@ -600,9 +614,11 @@
   ;; Check whether a major or minor mode did change since during the
   ;; previous function evaluation. Only if this is the case the
   ;; `overriding-local-map' variable will be updated.
-  (unless (equal lightning-mode-list (list major-mode minor-mode-alist))
+  (unless (equal lightning-mode-list
+		 (list major-mode (lightning-find-active-minor-modes)))
     ;; Update the mode-list
-    (setq lightning-mode-list (list major-mode minor-mode-alist))
+    (setq lightning-mode-list
+	  (list major-mode (lightning-find-active-minor-modes)))
     ;; Some general lightning-debugging information
     (if lightning-debugging
 	(progn
@@ -610,7 +626,7 @@
 		   (current-buffer))
 	  (message "\nCurrent major mode: %s" major-mode)
 	  (message "\nCurrent activated minor modes: %S"
-		   minor-mode-alist)))
+		   (lightning-find-active-minor-modes))))
 
     ;; Get a list of all active minor modes. But careful! The map of
     ;; lightning-keymap-mode must not be present. Else it tries to
