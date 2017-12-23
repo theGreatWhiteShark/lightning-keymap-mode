@@ -186,6 +186,12 @@
   :group 'lightning
   :type 'interger)
 
+(defvar lightning-keymap-mode-map (make-sparse-keymap)
+    "The lightning-keymap-mode keymap. To initialize or reset this
+    variable, please use the following command: `(setq lightning-keymap-mode-map (lightning-keymap-mode-get-keymap))")
+
+(defvar lightning-debugging nil "Active debugging messages by setting
+this variable non-nil")
 
 ;; Defining a global key to toggle the lightning-keymap (unless the
 ;; lightning-toggle-key wasn't set to nil).
@@ -193,9 +199,6 @@
 ;; when the lightning-keymap-mode is disabled.
 (global-set-key (kbd lightning-toggle-key)
 		'lightning-keymap-mode)
-
-;; Active debugging messages by setting this variable non-nil.
-(setq lightning-debugging nil)
 
 ;; A convenience function returning a list of all active minor modes
 ;; in the current buffer.
@@ -231,7 +234,7 @@
 (defun lightning-keymap-mode-get-keymap ()
   ;; Basic version of the keymap featuring only simple navigation,
   ;; buffer switching, and line breaking.
-  (defvar lightning-keymap-mode-map
+  (setq lightning-keymap-mode-map
     (let ((map (make-sparse-keymap)))
       ;;
       ;; Navigation
@@ -355,8 +358,7 @@
 				    (move-end-of-line 1)
 				    (comment-indent-new-line)
 				    (self-insert-command 1)))
-      map)
-    "lightning-keymap-mode keymap.")
+      map))
   ;; End of basic key bindings and map variable definition.
 
   ;;
