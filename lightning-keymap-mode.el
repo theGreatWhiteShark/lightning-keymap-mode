@@ -619,7 +619,7 @@ this variable non-nil")
 
 ;; Assigning the keymap to a variable, which will get bind to the
 ;; keymap of the minor mode.
-(defvar lightning-keymap-mode-map
+(setq lightning-keymap-mode-map
   (lightning-keymap-mode-get-keymap))
 
 (defun lightning-keymap-post-command-function ()
