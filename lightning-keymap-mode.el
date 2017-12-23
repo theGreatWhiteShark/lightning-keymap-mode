@@ -240,10 +240,10 @@ this variable non-nil")
       ;; Navigation
       ;;
       ;; First layer: neighbouring characters and lines
-      (define-key map (kbd "C-j") 'left-char)
-      (define-key map (kbd "C-k") 'next-line)
-      (define-key map (kbd "C-l") 'previous-line)
-      (define-key map (kbd "C-;") 'right-char)
+      (define-key key-translation-map (kbd "C-j") (kbd "<left>"))
+      (define-key key-translation-map (kbd "C-k") (kbd "<down>"))
+      (define-key key-translation-map (kbd "C-l") (kbd "<up>"))
+      (define-key key-translation-map (kbd "C-;") (kbd "<right>"))
       ;; Second layer: beginning/end of word/paragraph
       (define-key map (kbd "M-j") 'left-word)
       (define-key map (kbd "M-k") 'forward-paragraph)
