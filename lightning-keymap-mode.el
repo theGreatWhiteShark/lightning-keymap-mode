@@ -682,14 +682,14 @@
 	  (if lightning-debugging 
 	      (message "\nSince the buffer was a minibuffer the
 lightning-keymap was appended and no inheritance was set."))
-	  (setq lightning-key-mode-map
+	  (setq lightning-keymap-mode-map
 		(cons list-of-all-active-maps
 		      (lightning-keymap-mode-get-keymap))))
       (progn
-	(setq lightning-keymap-mode
+	(setq lightning-keymap-mode-map
 	      (lightning-keymap-mode-get-keymap)) 
 	(set-keymap-parent
-	 lightning-keymap-mode
+	 lightning-keymap-mode-map
 	 (make-composed-keymap list-of-all-active-maps))))
 
     (if lightning-debugging
@@ -749,7 +749,7 @@ Key bindings:
   ;; up.
   ;; It's better to trigger the changes when switching between buffers.
   (add-hook 'post-command-hook
-  	    'lightning-keymap-post-command-function)
+  	    'lightning-keymap-post-command-function) 
   )
 
 (provide 'lightning-keymap-mode)
