@@ -679,20 +679,11 @@ this variable non-nil")
     ;; Use the set of all active keymaps as the parent map for
     ;; `lightning-keymap-mode'. This way all key bindings not mapped in
     ;; this file will be looked up in the other keymaps.
-    (if (string= major-mode "minibuffer-inactive-mode")
-	(progn
-	  (if lightning-debugging 
-	      (message "\nSince the buffer was a minibuffer the
-lightning-keymap was appended and no inheritance was set."))
-	  (setq lightning-keymap-mode-map
-		(cons list-of-all-active-maps
-		      (lightning-keymap-mode-get-keymap))))
-      (progn
-	(setq lightning-keymap-mode-map
-	      (lightning-keymap-mode-get-keymap)) 
-	(set-keymap-parent
-	 lightning-keymap-mode-map
-	 (make-composed-keymap list-of-all-active-maps))))
+    (progn
+      (setq lightning-keymap-mode-map
+	    (lightning-keymap-mode-get-keymap)) 
+      (set-keymap-parent
+       lightning-keymap-mode-map list-of-all-active-maps))
 
     (if lightning-debugging
 	(progn
@@ -751,7 +742,7 @@ Key bindings:
   ;; up.
   ;; It's better to trigger the changes when switching between buffers.
   (add-hook 'post-command-hook
-  	    'lightning-keymap-post-command-function) 
+  	    'lightning-keymap-post-command-function)
   )
 
 (provide 'lightning-keymap-mode)
