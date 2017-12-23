@@ -631,6 +631,9 @@ this variable non-nil")
   ;; `overriding-local-map' variable will be updated.
   (unless (equal lightning-mode-list
 		 (list major-mode (lightning-find-active-minor-modes)))
+    ;; Get a fresh version of the lightning-keymap-mode-map
+    (setq lightning-keymap-mode-map
+	  (lightning-keymap-mode-get-keymap))
     ;; Update the mode-list
     (setq lightning-mode-list
 	  (list major-mode (lightning-find-active-minor-modes)))
@@ -651,14 +654,22 @@ this variable non-nil")
     ;; Add them in the original order.
     (setq int-iterator (length list-of-all-active-minor-mode-maps))
     (while (> int-iterator -1)
-      (if (equal (nth int-iterator list-of-all-active-minor-mode-maps)
-		 lightning-keymap-mode-map)
-	  (setq int-iterator (- int-iterator 1))
-	(setq list-of-all-active-maps
-	      (cons (nth int-iterator
-			 list-of-all-active-minor-mode-maps)
-		    list-of-all-active-maps))
-	(setq int-iterator (- int-iterator 1))))
+      (if (or
+	   (equal
+	    (nth int-iterator list-of-all-active-minor-mode-maps)
+	    lightning-keymap-mode-map)
+	   (not (keymapp
+		 (nth int-iterator list-of-all-active-minor-mode-maps))))
+	   (progn
+	     ;; If the component in the `(current-minor-mode-maps)'
+	     ;; list is either the lightning-keymap-mode-map itself
+	     ;; or an empty list, skip the element.
+	     (setq int-iterator (- int-iterator 1)))
+	   (setq list-of-all-active-maps
+		 (cons (nth int-iterator
+			    list-of-all-active-minor-mode-maps)
+		       list-of-all-active-maps))
+	   (setq int-iterator (- int-iterator 1))))
     
     (if lightning-debugging
 	(progn
@@ -679,11 +690,15 @@ this variable non-nil")
     ;; Use the set of all active keymaps as the parent map for
     ;; `lightning-keymap-mode'. This way all key bindings not mapped in
     ;; this file will be looked up in the other keymaps.
-    (progn
-      (setq lightning-keymap-mode-map
-	    (lightning-keymap-mode-get-keymap)) 
+    (if (keymapp list-of-all-active-maps)
+	(set-keymap-parent
+	 lightning-keymap-mode-map list-of-all-active-maps)
+      ;; `list-of-all-active-maps' is an actual list. So before
+      ;; setting it as a parent is has to be concatenated to a single
+      ;; keymap.
       (set-keymap-parent
-       lightning-keymap-mode-map list-of-all-active-maps))
+       lightning-keymap-mode-map
+       (make-composed-keymap list-of-all-active-maps)))
 
     (if lightning-debugging
 	(progn
