@@ -687,18 +687,24 @@ this variable non-nil")
 	  (message "\n(current-local-map)")
 	  (message "\n%S" (current-local-map))))
 
-    ;; Use the set of all active keymaps as the parent map for
+    ;; Use the set of all active keymaps and combine it with
     ;; `lightning-keymap-mode'. This way all key bindings not mapped in
-    ;; this file will be looked up in the other keymaps.
+    ;; this file will be looked up in the other keymaps. (Previously
+    ;; is used inheritance and `set-keymap-parent' to attach the
+    ;; active keymaps. But this led to bug #3 rendering the user
+    ;; unable to type e.g. 'yes' in the Dired minibuffer).
     (if (keymapp list-of-all-active-maps)
-	(set-keymap-parent
-	 lightning-keymap-mode-map list-of-all-active-maps)
+	(setq lightning-keymap-mode-map
+	      (make-composed-keymap
+	       (cons lightning-keymap-mode-map
+		     list-of-all-active-maps)))
       ;; `list-of-all-active-maps' is an actual list. So before
       ;; setting it as a parent is has to be concatenated to a single
       ;; keymap.
-      (set-keymap-parent
-       lightning-keymap-mode-map
-       (make-composed-keymap list-of-all-active-maps)))
+      (setq lightning-keymap-mode-map
+	    (make-composed-keymap
+	     (cons lightning-keymap-mode-map
+		   list-of-all-active-maps))))
 
     (if lightning-debugging
 	(progn
@@ -757,9 +763,16 @@ Key bindings:
   ;; up.
   ;; It's better to trigger the changes when switching between buffers.
   (add-hook 'post-command-hook
-  	    'lightning-keymap-post-command-function)
+  	    'lightning-keymap-post-command-function) 
   )
 
 (provide 'lightning-keymap-mode)
 ;;
 ;;; End of lightning-keymap-mode.el
+
+;;; ISSUES:
+;; * delete the key-translation-map bindings when toggling using
+;;   `lightning-keymap-mode'
+;; * C-S-j, C-M-S-j etc as repetitive remappings
+;; * unable to look up stuff using the help functions C-h \
+;; * unable to write "yes" in dired minibuffer
