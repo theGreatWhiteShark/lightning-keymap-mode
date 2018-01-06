@@ -649,7 +649,7 @@ this variable non-nil")
     ;; Get a list of all active minor modes. But careful! The map of
     ;; lightning-keymap-mode must not be present. Else it tries to
     ;; inherit from itself, what will break the code.
-    (setq list-of-all-active-maps)
+    (setq list-of-all-active-maps nil)
     (setq list-of-all-active-minor-mode-maps (current-minor-mode-maps))
     ;; Add them in the original order.
     (setq int-iterator (length list-of-all-active-minor-mode-maps))
@@ -775,4 +775,4 @@ Key bindings:
 ;;   `lightning-keymap-mode'
 ;; * C-S-j, C-M-S-j etc as repetitive remappings
 ;; * unable to look up stuff using the help functions C-h \
-;; * unable to write "yes" in dired minibuffer
+;; (describe-key &optional KEY UNTRANSLATED UP-EVENT)
