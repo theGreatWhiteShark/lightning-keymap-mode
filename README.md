@@ -56,6 +56,8 @@ group *Editing > Lightning* or the comment section in the beginning of
 
 # Installation
 
+Make sure you have an **Emacs 25.1 or newer** [installed](https://www.gnu.org/software/emacs/download.html#gnu-linux).
+
 In order to use the lightning-keymap-mode, you have to clone this
 repository to your local device
 

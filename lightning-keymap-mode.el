@@ -8,7 +8,7 @@
 ;; URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
 ;; Keywords: keymap, navigation
 ;; Package-Requires: ((iedit 0.97))
-;; Compatibility: GNU Emacs: >21.x
+;; Compatibility: GNU Emacs: >=25.1
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -761,9 +761,11 @@ Key bindings:
   ;; ... is detected, but one called `minibuffer-inactive-mode'
   ;; instead. This one provides almost no bindings and messes things
   ;; up.
-  ;; It's better to trigger the changes when switching between buffers.
-  (add-hook 'post-command-hook
-  	    'lightning-keymap-post-command-function) 
+  ;; It's better to trigger the changes when switching between
+  ;; buffers.
+  (when (>= (string-to-number (substring emacs-version 0 2)) 25)
+      (add-hook 'post-command-hook
+  		'lightning-keymap-post-command-function))
   )
 
 (provide 'lightning-keymap-mode)
@@ -774,5 +776,4 @@ Key bindings:
 ;; * delete the key-translation-map bindings when toggling using
 ;;   `lightning-keymap-mode'
 ;; * C-S-j, C-M-S-j etc as repetitive remappings
-;; * unable to look up stuff using the help functions C-h \
-;; (describe-key &optional KEY UNTRANSLATED UP-EVENT)
+;; * Console support
