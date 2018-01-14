@@ -112,9 +112,26 @@
 ;;      setting the `lightning-debugging' variable `t' or `nil'.
 ;;
 ;;    `lightning-keymap-mode-find-active-minor-modes'
+;;
 ;;      A convenience function returning a list of all active minor
 ;;      modes in the current buffer.
 ;;
+;;    `lightning-keymap-post-command-function'
+;;
+;;      This function creates a fresh version of the
+;;      `overriding-local-map' variable depending on the current
+;;      buffer and is attached to the `post-command-hook'. At each
+;;      function evaluation check whether a major or minor mode did
+;;      change since during the previous function evaluation. This is
+;;      done by creating a global variable containing both the active
+;;      minor modes and the major mode of the buffer (using the
+;;      `lightning-keymap-mode-find-active-minor-modes' function). In
+;;      addition it also checks whether the `overriding-local-map'
+;;      variable was touched by any functions other than this
+;;      one. This is done by comparing it to the
+;;      `lightning-keymap-mode-dummy-local-map' variable. Only if one
+;;      of those two cases did happen, the `overriding-local-map'
+;;      variable will be updated." 
 ;;
 ;;  For more information check out the projects Github page:
 ;;  https://github.com/theGreatWhiteShark/lightning-keymap-mode
@@ -657,13 +674,20 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
   change since during the previous function evaluation. This is done
   by creating a global variable containing both the active minor modes
   and the major mode of the buffer (using the
-  `lightning-keymap-mode-find-active-minor-modes' function). Only if
-  this variable changes, the `overriding-local-map' variable will be
-  updated."
-  
-  (unless (equal lightning-mode-list
-		 (list major-mode
-		       (lightning-keymap-mode-find-active-minor-modes)))
+  `lightning-keymap-mode-find-active-minor-modes' function). In
+  addition it also checks whether the `overriding-local-map' variable
+  was touched by any functions other than this one. This is done by
+  comparing it to the `lightning-keymap-mode-dummy-local-map'
+  variable. Only if one of those two cases did happen, the
+  `overriding-local-map' variable will be updated."
+
+  (unless
+      (and
+       (equal lightning-mode-list
+	      (list major-mode
+		    (lightning-keymap-mode-find-active-minor-modes)))
+       (equal overriding-local-map
+	      lightning-keymap-mode-dummy-local-map))
     ;; Get a fresh version of the lightning-keymap-mode-map
     (setq lightning-keymap-mode-map
 	  (lightning-keymap-mode-get-keymap))
@@ -741,13 +765,16 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
 	     (cons lightning-keymap-mode-map
 		   list-of-all-active-maps))))
 
+    ;; To search for a specific function use
+    ;; (string-match "FUNCNAME" (format "%s" overriding-local-map))
     (if lightning-debugging
 	(progn
-	  (message "\nlightning-keymap-mode-map used to overwrite the
-	local map") 
+	  (message "\nlightning-keymap-mode-map used to overwrite the local map") 
 	  (message "\n%S" lightning-keymap-mode-map)
 	  (message "\noverriding-local-map was set and returned")))
     (setq overriding-local-map lightning-keymap-mode-map)
+    (setq lightning-keymap-mode-dummy-local-map
+	  lightning-keymap-mode-map)
     overriding-local-map
     )
   )  
