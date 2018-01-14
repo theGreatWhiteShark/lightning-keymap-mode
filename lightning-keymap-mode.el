@@ -744,8 +744,14 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
 
 ;; Assigning the keymap to a variable, which will get bind to the
 ;; keymap of the minor mode.
-(setq lightning-keymap-mode-map
-  (lightning-keymap-mode-get-keymap))
+;; This variable is only defined if Emacs is opened in a GUI. When
+;; used in a terminal, events like "C-;" will not be handed over to
+;; Emacs. This, instead, just sees a press of the ";" key. Therefore
+;; it is unfortunately not possible to provide `lightning-keymap-mode'
+;; in the terminal and the variable has to remain `nil'. 
+(when (display-graphic-p)
+  (setq lightning-keymap-mode-map
+	(lightning-keymap-mode-get-keymap)))
 
 (defun lightning-keymap-post-command-function ()
   "This function creates a fresh version of the `overriding-local-map'
@@ -915,9 +921,11 @@ Key bindings:
   ;; `lightning-keymap-post-command-function' it is checked whether or
   ;; not the major mode or any of the minor modes did change. Only if
   ;; this is the case, the keymap will be updated.
-  (when (>= (string-to-number (substring emacs-version 0 2)) 25)
+  ;; In addition, assign the hook function if Emacs is opened in the GUI
+  (when (display-graphic-p)
+    (when (>= (string-to-number (substring emacs-version 0 2)) 25)
       (add-hook 'post-command-hook
-  		'lightning-keymap-post-command-function))
+  		'lightning-keymap-post-command-function)))
   )
 
 (provide 'lightning-keymap-mode)
