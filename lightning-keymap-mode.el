@@ -700,13 +700,17 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
   (unless lightning-basic-keymap
     ;; ESS (Emacs speaks statistics) - a very convenient mode for
     ;; manipulating R files.
+    ;;
+    ;; Make sure the second layer is gonna be executed on all kind of
+    ;; machines.
+    (define-key key-translation-map (kbd "<M-n>") (kbd "M-n"))
     (when (assq 'ess package-alist)
       (add-hook
        'ess-mode-hook
        (lambda()
 	 (local-set-key (kbd "C-n")
 			'lightning-keymap-ess-evaluation-layer-1)
-	 (local-set-key (kbd "<M-n>")
+	 (local-set-key (kbd "M-n")
 			'lightning-keymap-ess-evaluation-layer-2)
 	 (local-set-key (kbd "C-M-n")
 			'lightning-keymap-ess-evaluation-layer-3))))
@@ -730,7 +734,7 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
        (lambda()
 	 (local-set-key (kbd "C-n")
 			'lightning-keymap-python-evaluation-layer-1)
-	 (local-set-key (kbd "<M-n>")
+	 (local-set-key (kbd "M-n")
 			'lightning-keymap-python-evaluation-layer-2)
 	 (local-set-key (kbd "C-M-n")
 			'lightning-keymap-python-evaluation-layer-3))))
