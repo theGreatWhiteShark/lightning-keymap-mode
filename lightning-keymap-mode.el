@@ -106,7 +106,12 @@
 ;;      display of various debugging messages using the `message'
 ;;      function.
 ;;
-;;    `lightning-find-active-minor-modes'
+;;    `lightning-keymap-toggle-debugging'
+;;  
+;;      Function togging debugging in the `lightning-keymap-mode' by
+;;      setting the `lightning-debugging' variable `t' or `nil'.
+;;
+;;    `lightning-keymap-mode-find-active-minor-modes'
 ;;      A convenience function returning a list of all active minor
 ;;      modes in the current buffer.
 ;;
@@ -200,9 +205,24 @@ this variable non-nil")
 (global-set-key (kbd lightning-toggle-key)
 		'lightning-keymap-mode)
 
-;; A convenience function returning a list of all active minor modes
-;; in the current buffer.
-(defun lightning-find-active-minor-modes ()
+(defun lightning-keymap-toggle-debugging ()
+  "Toggles debugging in the `lightning-keymap-mode'.
+
+To always have the appropriate key bindings assigned, this minor mode
+checks after each function evaluation (`post-command-hook') if the
+focused buffer still has the same minor and major modes. If this is
+not the case, `lightning-keymap-post-command-function' is executed to
+update the `overriding-local-map' variable. Within the function
+evaluation a number of `messages' are triggered reporting the current
+state (e.g. the names of the active minor modes and major mode, the
+bindings of all active maps etc.)"
+  (if lightning-debugging
+      (setq lightning-debugging nil)
+    (setq lightning-debugging t)))
+
+(defun lightning-keymap-mode-find-active-minor-modes ()
+  "A convenience function returning a list of all active minor modes
+in the current buffer."
   (let (minor-mode-list-active)
     (dolist (minor-mode minor-mode-list minor-mode-list-active)
       (when (and (boundp minor-mode) (symbolp minor-mode))
@@ -213,25 +233,29 @@ this variable non-nil")
 		  (cons minor-mode minor-mode-list-active))))
       minor-mode-list-active)))
 
-;; After each function evaluation the
-;; `lightning-keymap-post-command-function' function is called to set
-;; up a new `overriding-local-map' variable containing the local
-;; keymap, which will not be shadowed by overlays introduced by
-;; various other minor modes. Since it is a waste of CPU time to set
-;; up the map after each and every command anew, this global variable
-;; will contain a list of the current major and minor modes. So, after
-;; every function evaluation the content of this variable is checked
-;; first and only if there are changes the `overriding-local-map' will
-;; be reset.
-(setq lightning-mode-list
-      (list major-mode (lightning-find-active-minor-modes)))
 
-;; This function creates the keymap of `lightning-keymap-mode'. It's
-;; used in the hooks and for initialization to create fresh
-;; representations of the underlying keymaps (with no additional minor
-;; mode maps stuck as parent-keymap `lightning-keymap-mode-map'
-;; inherits from).
+(defvar lightning-mode-list
+  (list major-mode
+	(lightning-keymap-mode-find-active-minor-modes))
+  "After each function evaluation the
+`lightning-keymap-post-command-function' function is called to set
+up a new `overriding-local-map' variable containing the local
+keymap, which will not be shadowed by overlays introduced by
+various other minor modes. Since it is a waste of CPU time to set
+up the map after each and every command anew, this global variable
+will contain a list of the current major and minor modes. So, after
+every function evaluation the content of this variable is checked
+first and only if there are changes the `overriding-local-map' will
+be reset.")
+
+
 (defun lightning-keymap-mode-get-keymap ()
+  "This function creates the keymap of `lightning-keymap-mode'. 
+
+It's used in the `post-command-hook' and for initialization to create
+fresh representations of the underlying keymap (with no additional
+major mode or minor mode maps attached to `lightning-keymap-mode-map'."
+
   ;; Basic version of the keymap featuring only simple navigation,
   ;; buffer switching, and line breaking.
   (setq lightning-keymap-mode-map
@@ -548,7 +572,8 @@ this variable non-nil")
     ;;
     ;; String replacement
     ;; 
-    ;; First layer: Use the `replace-string' function on the current line
+    ;; First layer: Use the `replace-string' function on the current
+    ;; line 
     (define-key lightning-keymap-mode-map (kbd "C-\\")
       (lambda()
 	(interactive)
@@ -558,7 +583,8 @@ this variable non-nil")
 	      (set-mark (line-end-position))
 	      (move-beginning-of-line 1)
 	      (call-interactively 'replace-string))))))
-    ;; Second layer: Use the `replace-string' function on the whole buffer
+    ;; Second layer: Use the `replace-string' function on the whole
+    ;; buffer 
     (define-key lightning-keymap-mode-map (kbd "M-\\") 'replace-string)
     ;; Third layer: Using the `iedit' package to change all parts of a
     ;; buffer, matching a previously marked region, simultaneously.
@@ -590,8 +616,8 @@ this variable non-nil")
 	 (local-set-key (kbd "C-M-n")
 			'lightning-keymap-ess-evaluation-layer-3))))
     ;; When manipulating RMarkdown files using `polymode' the export
-    ;; function bound to `lightning-keymap-ess-evaluation-layer-3' should
-    ;; be working in the markdown part of the document as well.
+    ;; function bound to `lightning-keymap-ess-evaluation-layer-3'
+    ;; should be working in the markdown part of the document as well.
     (when (assq 'polymode-minor-mode minor-mode-alist)
       (add-hook
        'markdown-mode-hook
@@ -600,9 +626,9 @@ this variable non-nil")
 			'lightning-keymap-ess-evaluation-layer-3))))
 
     ;; Python-mode
-    ;; Since I don't seem to find the Python package in the `package-alist'
-    ;; variable, I will just check whether there is a function called
-    ;; 'python-mode'.
+    ;; Since I don't seem to find the Python package in the
+    ;; `package-alist' variable, I will just check whether there is a
+    ;; function called `python-mode'.
     (when (functionp 'python-mode)
       (add-hook
        'python-mode-hook
@@ -623,20 +649,28 @@ this variable non-nil")
   (lightning-keymap-mode-get-keymap))
 
 (defun lightning-keymap-post-command-function ()
-  ;; Let the package's keymap inherit from all other available maps so
-  ;; it will know about their bindings as well.
+  "This function creates a fresh version of the `overriding-local-map'
+  variable depending on the current buffer and is attached to the
+  `post-command-hook'
 
-  ;; Check whether a major or minor mode did change since during the
-  ;; previous function evaluation. Only if this is the case the
-  ;; `overriding-local-map' variable will be updated.
+  At each function evaluation check whether a major or minor mode did
+  change since during the previous function evaluation. This is done
+  by creating a global variable containing both the active minor modes
+  and the major mode of the buffer (using the
+  `lightning-keymap-mode-find-active-minor-modes' function). Only if
+  this variable changes, the `overriding-local-map' variable will be
+  updated."
+  
   (unless (equal lightning-mode-list
-		 (list major-mode (lightning-find-active-minor-modes)))
+		 (list major-mode
+		       (lightning-keymap-mode-find-active-minor-modes)))
     ;; Get a fresh version of the lightning-keymap-mode-map
     (setq lightning-keymap-mode-map
 	  (lightning-keymap-mode-get-keymap))
     ;; Update the mode-list
     (setq lightning-mode-list
-	  (list major-mode (lightning-find-active-minor-modes)))
+	  (list major-mode
+		(lightning-keymap-mode-find-active-minor-modes)))
     ;; Some general lightning-debugging information
     (if lightning-debugging
 	(progn
@@ -644,7 +678,7 @@ this variable non-nil")
 		   (current-buffer))
 	  (message "\nCurrent major mode: %s" major-mode)
 	  (message "\nCurrent activated minor modes: %S"
-		   (lightning-find-active-minor-modes))))
+		   (lightning-keymap-mode-find-active-minor-modes))))
 
     ;; Get a list of all active minor modes. But careful! The map of
     ;; lightning-keymap-mode must not be present. Else it tries to
@@ -659,7 +693,8 @@ this variable non-nil")
 	    (nth int-iterator list-of-all-active-minor-mode-maps)
 	    lightning-keymap-mode-map)
 	   (not (keymapp
-		 (nth int-iterator list-of-all-active-minor-mode-maps))))
+		 (nth int-iterator
+		      list-of-all-active-minor-mode-maps))))
 	   (progn
 	     ;; If the component in the `(current-minor-mode-maps)'
 	     ;; list is either the lightning-keymap-mode-map itself
@@ -708,7 +743,8 @@ this variable non-nil")
 
     (if lightning-debugging
 	(progn
-	  (message "\nlightning-keymap-mode-map used to overwrite the local map")
+	  (message "\nlightning-keymap-mode-map used to overwrite the
+	local map") 
 	  (message "\n%S" lightning-keymap-mode-map)
 	  (message "\noverriding-local-map was set and returned")))
     (setq overriding-local-map lightning-keymap-mode-map)
@@ -718,11 +754,41 @@ this variable non-nil")
 
 ;; Activating the customized keybindings with every major mode.
 (define-minor-mode lightning-keymap-mode
-  "Toggle YASnippet mode.
+  "In `lightning-keymap-mode' a keymap tailored for fast navigation and
+editing is superimposed on top of your regular keymaps using a minor
+mode. Since this might shadow some essential key bindings you use on a
+regular basis, you can turn the mode on and off using
+`lightning-toggle-key` (default <F5>).
 
-When YASnippet mode is enabled, `yas-expand', normally bound to
-the TAB key, expands snippets of code depending on the major
-mode.
+There are two basic ideas to this package:
+
+1.  Navigation happens using the `j', `k', `l', and `;' keys and there
+    are a bunch of useful and frequently used commands placed on the
+    surrounding keys (like killing (cutting), yanking (pasting),
+    copying, line breaks etc.) 
+
+2.  There are several different 'layers' invoked by the `Ctrl', `Meta',
+    and `Shift' key (and combinations of these). While the Ctrl key is
+    invoking basic (slow) navigation, like moving forward or backward
+    one line or character, the Meta key speeds things up by moving
+    forward or backward a word or paragraph. The combination of both
+    features the most fast behaviour (e.g. Ctrl + Meta + ; will move
+    the point to the end of a line and Ctrl + Meta + l to the
+    beginning of the buffer). A notable exception is Meta + Shift,
+    which is used to navigate between buffers. 
+
+3.  The second idea is also applied on most of the additional key
+    bindings: Ctrl + , deletes backwards a character, Meta + , deletes
+    backwards a word, and Ctrl + Meta + , deletes the current line
+    (apart from this, those commands are also sensitive towards marked
+    regions). 
+
+The evaluation functions bound to the `m' key are currently just
+supported for `ESS' and `python-mode'.
+
+For additional information and customization please refer to the
+customization group Editing > Lightning or the comment section in the
+beginning of lightning-keymap-mode.el. 
 
 With no argument, this command toggles the mode.
 positive prefix argument turns on the mode.
@@ -735,34 +801,11 @@ Key bindings:
   :global t
   :keymap lightning-keymap-mode-map
 
-  ;; There are some minor modes interfering with the keymap provided
-  ;; by this one. For now only the `flyspell', `yasnippet' and
-  ;; `isearch' mode came to my attention. If present, the key bindings
-  ;; imposed by those packages have to be shadowed in order to ensure
-  ;; `lightning-keymap' will work properly.
-  ;;
-  ;; Since `flyspell' uses overlays to introduce its key bindings, a
-  ;; mere change of order in the load path won't solve the problem.
-  ;; For now I see two different routes (both don't work yet)
-  ;;  1. Use overriding-local-map to override all minor-mode-maps and
-  ;;     overlays. But it's tricky since it also shadows important
-  ;;     keys.
-  ;;  2. Provide hooks to turn of the overlays and key bindings in all
-  ;;     interfering modes. But this is a tedious thing to do and it
-  ;;     won't ensure `lightning-keymap-mode' to work properly for
-  ;;     other users as well.
-
-  ;; My take on the first option:
-  ;; This mode-hook can not be used. It is only triggered creating a
-  ;; buffer (?in a NEW major-mode?), but not when changing between
-  ;; buffers. Therefore the map is not changed back to its previous
-  ;; state and this is bad.
-  ;; In addition not the actual major more, like fundamental, helm
-  ;; ... is detected, but one called `minibuffer-inactive-mode'
-  ;; instead. This one provides almost no bindings and messes things
-  ;; up.
-  ;; It's better to trigger the changes when switching between
-  ;; buffers.
+  ;; Create a fresh representation of the `overriding-local-map'
+  ;; variable whenever a function was evaluated. Inside the
+  ;; `lightning-keymap-post-command-function' it is checked whether or
+  ;; not the major mode or any of the minor modes did change. Only if
+  ;; this is the case, the keymap will be updated.
   (when (>= (string-to-number (substring emacs-version 0 2)) 25)
       (add-hook 'post-command-hook
   		'lightning-keymap-post-command-function))
@@ -771,9 +814,3 @@ Key bindings:
 (provide 'lightning-keymap-mode)
 ;;
 ;;; End of lightning-keymap-mode.el
-
-;;; ISSUES:
-;; * delete the key-translation-map bindings when toggling using
-;;   `lightning-keymap-mode'
-;; * C-S-j, C-M-S-j etc as repetitive remappings
-;; * Console support
