@@ -3,7 +3,7 @@
 ;; Author: Philipp Müller <thetruephil@googlemail.com>
 ;; Maintainer: Philipp Müller <thetruephil@googlemail.com>
 ;; Version: 0.1.0
-;; Created: October 19, 2017
+;; Created: January 19, 2018
 ;; X-URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
 ;; URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
 ;; Keywords: keymap, navigation
@@ -904,7 +904,7 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
 	  lightning-keymap-mode-map)
     overriding-local-map
     )
-  )  
+  )
 
 ;; Activating the customized keybindings with every major mode.
 (define-minor-mode lightning-keymap-mode
@@ -955,13 +955,27 @@ Key bindings:
   :global t
   :keymap lightning-keymap-mode-map
 
+  ;; Unsetting all customization. Only if the `lightning-keymap-mode'
+  ;; variable is true and thus the `(lightning-keymap-mode)' function
+  ;; was called to *activate* the mode, the customization will be set.
+  (when (display-graphic-p)
+    (when (>= (string-to-number (substring emacs-version 0 2)) 25)
+      (remove-hook 'post-command-hook
+  		   'lightning-keymap-post-command-function)))
+  (define-key key-translation-map (kbd "C-j") nil)
+  (define-key key-translation-map (kbd "C-k") nil)
+  (define-key key-translation-map (kbd "C-l") nil)
+  (define-key key-translation-map (kbd "C-;") nil)
+  (define-key key-translation-map (kbd "<M-n>") nil)
+  (setq overriding-local-map nil)
+  
   ;; Create a fresh representation of the `overriding-local-map'
   ;; variable whenever a function was evaluated. Inside the
   ;; `lightning-keymap-post-command-function' it is checked whether or
   ;; not the major mode or any of the minor modes did change. Only if
   ;; this is the case, the keymap will be updated.
   ;; In addition, assign the hook function if Emacs is opened in the GUI
-  (when (display-graphic-p)
+  (when (and lightning-keymap-mode (display-graphic-p))
     (when (>= (string-to-number (substring emacs-version 0 2)) 25)
       (add-hook 'post-command-hook
   		'lightning-keymap-post-command-function)))
