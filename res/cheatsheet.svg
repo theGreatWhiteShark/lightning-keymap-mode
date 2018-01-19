@@ -7959,9 +7959,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
-     inkscape:cx="805.98222"
-     inkscape:cy="91.20361"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="222.97197"
+     inkscape:cy="600.28778"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -8023,7 +8023,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -8178,29 +8178,29 @@
          style="font-size:14px;fill:#f0f8ff">lightning-jump-lines-fast<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan3603">1</flowSpan></flowPara><flowPara
-         id="flowPara6005">  Number of lines to jump in</flowPara><flowPara
-         id="flowPara6007">  C-S-layer. Default: 4</flowPara><flowPara
+         id="flowPara6007">  Number of times to call [up] or</flowPara><flowPara
+         id="flowPara6323">  [down]. Default: 4</flowPara><flowPara
          id="flowPara6009" /><flowPara
          id="flowPara6011"
          style="font-size:14px;fill:#f0f8ff">lightning-jump-chars-fast<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan3605">2</flowSpan></flowPara><flowPara
-         id="flowPara6013">  Numbers of chars to jump in</flowPara><flowPara
-         id="flowPara6017">  C-S-layer. Default: 3</flowPara><flowPara
+         id="flowPara6017">  Number of times to call [left] or</flowPara><flowPara
+         id="flowPara6327">  [right]. Default: 3</flowPara><flowPara
          id="flowPara6034" /><flowPara
          id="flowPara6036"
          style="font-size:14px;fill:#f0f8ff">lightning-jump-lines-faster<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan3609">3</flowSpan></flowPara><flowPara
-         id="flowPara6038">  Number of lines to jump in</flowPara><flowPara
-         id="flowPara6040">  C-M-S-layer. Default: 30</flowPara><flowPara
+         id="flowPara6038">  Number of times to call [up] or</flowPara><flowPara
+         id="flowPara6040">  [down. Default: 30</flowPara><flowPara
          id="flowPara6042" /><flowPara
          id="flowPara6044"
          style="font-size:14px;fill:#f0f8ff">lightning-jump-chars-faster<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan3612">4</flowSpan></flowPara><flowPara
-         id="flowPara6046">  Number of chars to jump in</flowPara><flowPara
-         id="flowPara6048">  C-M-S-layer. Default: 15</flowPara><flowPara
+         id="flowPara6048">  Number of times to call [left] or</flowPara><flowPara
+         id="flowPara6331">  [right]. Default: 15</flowPara><flowPara
          id="flowPara6050" /><flowPara
          id="flowPara6052"
          style="font-size:14px;fill:#f0f8ff">lightning-delete-chars-fast<flowSpan
@@ -8278,7 +8278,7 @@
          id="flowPara3560"
          style="font-size:14.69847775px" /><flowPara
          id="flowPara3562"
-         style="font-size:12.24873161px;line-height:122.00000286%">maps to &lt;RETURN&gt;</flowPara><flowPara
+         style="font-size:12.24873161px;line-height:122.00000286%">maps to [return]</flowPara><flowPara
          id="flowPara3564"
          style="font-size:12.24873161px;line-height:122.00000286%">insert a line break at the end of the line</flowPara><flowPara
          id="flowPara3566"
@@ -8733,7 +8733,7 @@
          id="flowPara4784"
          style="font-size:15px" /><flowPara
          id="flowPara4786"
-         style="line-height:122.00000286%">maps to &lt;TAB&gt;</flowPara><flowPara
+         style="line-height:122.00000286%">maps to [tab]</flowPara><flowPara
          id="flowPara4788"
          style="line-height:122.00000286%">indent the current paragraph</flowPara><flowPara
          id="flowPara4790"
@@ -8754,9 +8754,9 @@
          id="flowPara4804"
          style="line-height:122.00000286%">replace string in the current line</flowPara><flowPara
          id="flowPara4806"
-         style="line-height:122.00000286%">replace string in the whole buffer</flowPara><flowPara
+         style="line-height:122.00000286%">replace string in the current paragraph</flowPara><flowPara
          id="flowPara4808"
-         style="line-height:122.00000286%">run iedit on word at point</flowPara></flowRoot>    <flowRoot
+         style="line-height:122.00000286%">replace string in the whole buffer</flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
        style="font-size:12.5px;font-style:normal;font-weight:normal;text-align:end;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        id="flowRoot4814"
@@ -8875,12 +8875,15 @@
        x="268.07617"
        y="1044.9598"
        id="text5784"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/phil/git/configurations-and-scripts/emacs/lightning-keymap-mode/res/cheatsheet.png"
+       inkscape:export-xdpi="23.049999"
+       inkscape:export-ydpi="23.049999"><tspan
          sodipodi:role="line"
          x="268.07617"
          y="1044.9598"
          id="tspan5792"
-         style="font-size:10px">Visit https://github.com/theGreatWhiteShark/lightning-keymap-mode for details  •  created 18/11/2017</tspan></text>
+         style="font-size:10px">Visit https://github.com/theGreatWhiteShark/lightning-keymap-mode for details  •  created 19/01/2018</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:12.5px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
@@ -9004,13 +9007,13 @@
          id="flowPara3360"
          style="font-size:15px" /><flowPara
          id="flowPara3362"
-         style="font-size:12.5px;line-height:122.00000286%">move left one character</flowPara><flowPara
+         style="font-size:12.5px;line-height:122.00000286%">maps to [left]</flowPara><flowPara
          id="flowPara3424"
-         style="font-size:12.5px;line-height:122.00000286%">move down one line</flowPara><flowPara
+         style="font-size:12.5px;line-height:122.00000286%">maps to [down]</flowPara><flowPara
          id="flowPara3426"
-         style="font-size:12.5px;line-height:122.00000286%">move up one line</flowPara><flowPara
+         style="font-size:12.5px;line-height:122.00000286%">maps to [up]</flowPara><flowPara
          id="flowPara3428"
-         style="font-size:12.5px;line-height:122.00000286%">move right one character</flowPara><flowPara
+         style="font-size:12.5px;line-height:122.00000286%">maps to [right]</flowPara><flowPara
          id="flowPara3430"
          style="font-size:12.5px;line-height:122.00000286%" /><flowPara
          id="flowPara3432"
@@ -9044,37 +9047,37 @@
          id="flowPara3460"
          style="font-size:12.5px;line-height:122.00000286%" /><flowPara
          id="flowPara3462"
-         style="font-size:12.5px;line-height:122.00000286%">move left fast<flowSpan
+         style="font-size:12.5px;line-height:122.00000286%">move [left] fast<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan14558">1</flowSpan></flowPara><flowPara
          id="flowPara3464"
-         style="font-size:12.5px;line-height:122.00000286%">move down fast<flowSpan
+         style="font-size:12.5px;line-height:122.00000286%">move [down] fast<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan14560">2</flowSpan></flowPara><flowPara
          id="flowPara3466"
-         style="font-size:12.5px;line-height:122.00000286%">move up fast<flowSpan
+         style="font-size:12.5px;line-height:122.00000286%">move [up] fast<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan14562">2</flowSpan></flowPara><flowPara
          id="flowPara3468"
-         style="font-size:12.5px;line-height:122.00000286%">move right fast<flowSpan
+         style="font-size:12.5px;line-height:122.00000286%">move [right] fast<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan14564">1</flowSpan></flowPara><flowPara
          id="flowPara3470"
          style="font-size:12.5px;line-height:122.00000286%" /><flowPara
          id="flowPara3472"
-         style="font-size:12.5px;line-height:122.00000286%">move left faster<flowSpan
+         style="font-size:12.5px;line-height:122.00000286%">move [left] faster<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan14566">3</flowSpan></flowPara><flowPara
          id="flowPara3474"
-         style="font-size:12.5px;line-height:122.00000286%">move down faster<flowSpan
+         style="font-size:12.5px;line-height:122.00000286%">move [down] faster<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan14568">4</flowSpan></flowPara><flowPara
          id="flowPara3476"
-         style="font-size:12.5px;line-height:122.00000286%">move up faster<flowSpan
+         style="font-size:12.5px;line-height:122.00000286%">move [up] faster<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan14570">4</flowSpan></flowPara><flowPara
          id="flowPara3478"
-         style="font-size:12.5px;line-height:122.00000286%">move right faster<flowSpan
+         style="font-size:12.5px;line-height:122.00000286%">move [right] faster<flowSpan
    style="font-size:65.00091553%;baseline-shift:super"
    id="flowSpan14572">3</flowSpan></flowPara></flowRoot>    <flowRoot
        xml:space="preserve"
