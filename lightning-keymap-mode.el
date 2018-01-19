@@ -827,7 +827,7 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
 
     ;; Add the current major mode map last
     (setq list-of-all-active-maps
-	  (cons list-of-all-active-maps (current-local-map)))
+	  (cons (current-local-map) list-of-all-active-maps))
     
     (if lightning-debugging
 	(progn
