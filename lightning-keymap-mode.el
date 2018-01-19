@@ -7,7 +7,6 @@
 ;; X-URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
 ;; URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
 ;; Keywords: keymap, navigation
-;; Package-Requires: ((iedit 0.97))
 ;; Compatibility: GNU Emacs: >=25.1
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -37,14 +36,15 @@
 ;;
 ;;    `lightning-toggle-key'
 ;;
-;;      A key-sequence specifying a global binding toggling the lightning
-;;      keymap. To prevent this minor mode from setting the global
-;;      key binding, you can initialize the variable with nil.
+;;      A string to specify a key sequence using the `kbd' function
+;;      for a global binding toggling the lightning keymap. To
+;;      prevent this minor mode from setting the global key binding,
+;;      you can initialize the variable with nil. 
 ;;      Default: "<F5>".
 ;;
 ;;    `lightning-basic-keymap'
 ;;
-;;      If set to non-nil, all bindings of the lightning-keymap-mode
+;;      If set to non-nil, all bindings of the `lightning-keymap-mode'
 ;;      will be activated. Setting it to `t' instead will only bind
 ;;      the keys used for navigation (j, k, l, ;) and for line breaks
 ;;      (m). Default: nil.
@@ -64,28 +64,28 @@
 ;;  
 ;;    `lightning-jump-chars-fast'
 ;;
-;;      Number of characters to jump in the fifth, more faster,
-;;      of navigation. This constant will affect the left and right
-;;      navigation using `C-S-j' and `C-:'. Default = 3.
+;;      Number of times the underlying key bindings are called. This
+;;      constant will affect the [left] and [right] navigation using
+;;      `C-S-j' and `C-:'. Default = 3. 
 ;;
 ;;    `lightning-jump-lines-fast'
 ;;
-;;      Number of lines to jump in the fifth, more faster, layer of
-;;      navigation. This constant will affect the up and down
-;;      navigation using `C-S-l' and `C-S-k'. Default = 4.
+;;      Number of times the underlying key bindings are called. This
+;;      constant will affect the [up] and [down] navigation using
+;;      `C-S-l' and `C-S-k'. Default = 4. 
 ;;
 ;;    `lightning-jump-chars-faster'
 ;;
-;;      Number of characters to jump in the sixth, even more faster,
-;;      layer of navigation. This constant will affect the left and
-;;      right navigation using `C-M-S-j' and `C-M-:'. Default = 15. 
+;;      Number of times the underlying key bindings are called. This
+;;      constant will affect the [left] and [right] navigation using
+;;      `C-M-S-j' and `C-M-:'. Default = 15. 
 ;;
 ;;    `lightning-jump-lines-faster'
-;;    
-;;      Number of lines to jump in the sixth, even more faster, layer
-;;      of navigation. This constant will affect the up and down
-;;      navigation using `C-M-S-l' and `C-M-S-k'. Default = 30. 
 ;;
+;;      Number of times the underlying key bindings are called. This
+;;      constant will affect the [up] and [down] navigation using
+;;      `C-M-S-l' and `C-M-S-k'. Default = 30.
+;;    
 ;;    `lightning-delete-words-fast'
 ;;
 ;;      Number of words to delete either forward or backward in the
@@ -102,19 +102,29 @@
 ;;
 ;;    `lightning-debugging'
 ;;
-;;      If set to a value other than nil this variable triggers the
+;;      If set to a value other than nil this, variable triggers the
 ;;      display of various debugging messages using the `message'
 ;;      function.
 ;;
 ;;    `lightning-keymap-toggle-debugging'
 ;;  
-;;      Function togging debugging in the `lightning-keymap-mode' by
-;;      setting the `lightning-debugging' variable `t' or `nil'.
+;;      Function togging the debugging of the `lightning-keymap-mode'
+;;      by setting the `lightning-debugging' variable.
 ;;
 ;;    `lightning-keymap-mode-find-active-minor-modes'
 ;;
 ;;      A convenience function returning a list of all active minor
 ;;      modes in the current buffer.
+;;
+;;    `lightning-keymap-mode-modifies-string-replacement'
+;;
+;;      If set to non-nil, the `lightning-keymap-mode-replace-string'
+;;      function will be bound to the '\' key. If set the `nil', the
+;;      default Emacs function `replace-string' will be used
+;;      instead. The customized search function uses the word at point
+;;      as the default value for the `FROM' argument of the
+;;      replacement function instead of the last replacement
+;;      call. Default: t.
 ;;
 ;;    `lightning-keymap-post-command-function'
 ;;
@@ -131,17 +141,16 @@
 ;;      one. This is done by comparing it to the
 ;;      `lightning-keymap-mode-dummy-local-map' variable. Only if one
 ;;      of those two cases did happen, the `overriding-local-map'
-;;      variable will be updated." 
+;;      variable will be updated.
 ;;
 ;;  For more information check out the projects Github page:
 ;;  https://github.com/theGreatWhiteShark/lightning-keymap-mode
 
 (require 'lightning-keymap-mode-modes)
+(require 'lightning-keymap-mode-functions)
 
 ;; For a more convenient ways of moving between buffers.
 (require 'windmove)
-;; Interactive edit to manipulate multiple identical words at the time
-(require 'iedit)
 
 ;;; Customized variables
 ;;;
@@ -167,30 +176,30 @@
   :type 'boolean)
 
 (defcustom lightning-jump-chars-fast 3
-  "Number of characters to jump in the fifth, more faster, layer of
-  navigation. This constant will affect the left and right navigation
-  using `C-S-j' and `C-:'. Default = 3."
+  "Number of times the underlying key bindings are called. This
+  constant will affect the [left] and [right] navigation using
+  `C-S-j' and `C-:'. Default = 3." 
   :group 'lightning
   :type 'integer)
 
 (defcustom lightning-jump-lines-fast 4
-  "Number of lines to jump in the fifth, more faster, layer of
-  navigation. This constant will affect the up and down navigation
-  using `C-S-l' and `C-S-k'. Default = 4."
+  "Number of times the underlying key bindings are called. This
+  constant will affect the [up] and [down] navigation using `C-S-l'
+  and `C-S-k'. Default = 4." 
   :group 'lightning
   :type 'integer)
 
 (defcustom lightning-jump-chars-faster 15
-  "Number of characters to jump in the sixth, even more faster, layer of
-  navigation. This constant will affect the left and right navigation
-  using `C-M-S-j' and `C-M-:'. Default = 15."
+  "Number of times the underlying key bindings are called. This
+  constant will affect the [left] and [right] navigation using
+  `C-M-S-j' and `C-M-:'. Default = 15." 
   :group 'lightning
   :type 'integer)
 
 (defcustom lightning-jump-lines-faster 30
-  "Number of lines to jump in the sixth, even more faster, layer of
-  navigation. This constant will affect the up and down navigation
-  using `C-M-S-l' and `C-M-S-k'. Default = 30."
+  "Number of times the underlying key bindings are called. This
+  constant will affect the [up] and [down] navigation using `C-M-S-l'
+  and `C-M-S-k'. Default = 30." 
   :group 'lightning
   :type 'integer)
 
@@ -208,6 +217,16 @@
   :group 'lightning
   :type 'interger)
 
+(defcustom lightning-keymap-mode-modifies-string-replacement t
+  "If set to non-nil, the `lightning-keymap-mode-replace-string'
+  function will be bound to the '\' key. If set the `nil', the default
+  Emacs function `replace-string' will be used instead. The customized
+  search function uses the word at point as the default value for the
+  `FROM' argument of the replacement function instead of the last
+  replacement call. Default: t"
+  :group 'lightning
+  :type 'string)
+
 (defvar lightning-keymap-mode-map (make-sparse-keymap)
     "The lightning-keymap-mode keymap. To initialize or reset this
     variable, please use the following command: `(setq lightning-keymap-mode-map (lightning-keymap-mode-get-keymap))")
@@ -216,7 +235,7 @@
 this variable non-nil")
 
 ;; Defining a global key to toggle the lightning-keymap (unless the
-;; lightning-toggle-key wasn't set to nil).
+;; `lightning-toggle-key' wasn't set to nil).
 ;; It has to be a global one, because it has to be still available
 ;; when the lightning-keymap-mode is disabled.
 (global-set-key (kbd lightning-toggle-key)
@@ -262,7 +281,7 @@ various other minor modes. Since it is a waste of CPU time to set
 up the map after each and every command anew, this global variable
 will contain a list of the current major and minor modes. So, after
 every function evaluation the content of this variable is checked
-first and only if there are changes the `overriding-local-map' will
+first and if there are changes, the `overriding-local-map' will
 be reset.")
 
 
@@ -301,9 +320,9 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
       (define-key map (kbd "M-K") 'windmove-down)
       (define-key map (kbd "M-:") 'windmove-right)
       ;; Fifth layer: faster scrolling than in the first layer
-      ;;
+      ;; 
       ;; The faster navigation should be available in all Emacs
-      ;; buffers, even in those where <left>, <up> etc. do something
+      ;; buffers, even in those where [left], [up] etc. do something
       ;; different than just moving a char or a line. Therefore the
       ;; following keystrokes are converted into a list of the
       ;; underlying keystrokes and sent to Emacs for interpretation.
@@ -668,22 +687,42 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
     ;; String replacement
     ;; 
     ;; First layer: Use the `replace-string' function on the current
-    ;; line 
+    ;; line or the marked region (the modified replace version takes
+    ;; the characters in the marked region as a default instead)
     (define-key lightning-keymap-mode-map (kbd "C-\\")
       (lambda()
 	(interactive)
-	(save-excursion
-	  (if mark-active (call-interactively 'replace-string)
-	    (progn
-	      (set-mark (line-end-position))
-	      (move-beginning-of-line 1)
-	      (call-interactively 'replace-string))))))
-    ;; Second layer: Use the `replace-string' function on the whole
-    ;; buffer 
-    (define-key lightning-keymap-mode-map (kbd "M-\\") 'replace-string)
-    ;; Third layer: Using the `iedit' package to change all parts of a
-    ;; buffer, matching a previously marked region, simultaneously.
-    (define-key lightning-keymap-mode-map (kbd "C-M-\\") 'iedit-mode))
+	(if lightning-keymap-mode-modifies-string-replacement
+	    (lightning-keymap-mode-replace-string "line")
+	  (save-excursion
+	    (if mark-active (call-interactively 'replace-string)
+	      (progn
+		(set-mark (line-end-position))
+		(move-beginning-of-line 1)
+		(call-interactively 'replace-string)))))))
+    ;; Second layer: Use the `replace-string' function on the current
+    ;; paragraph or the marked region
+    (define-key lightning-keymap-mode-map (kbd "M-\\")
+      (lambda()
+	(interactive)
+	(if lightning-keymap-mode-modifies-string-replacement
+	    (lightning-keymap-mode-replace-string "paragraph")
+	  (progn
+	    (if mark-active (call-interactively 'replace-string)
+	      (progn
+		(backward-paragraph)
+		(set-mark (point))
+		(forward-paragraph)
+		(call-interactively 'replace-string)))))))
+    ;; Third layer: Use the `replace-string' function on the current
+    ;; buffer.
+    (define-key lightning-keymap-mode-map (kbd "C-M-\\")
+      (lambda()
+	(interactive)
+	(if lightning-keymap-mode-modifies-string-replacement
+	    (lightning-keymap-mode-replace-string "buffer")
+	  (call-interactively 'replace-string))))
+    )
   ;; End of non-basic key bindings.
 
   ;;

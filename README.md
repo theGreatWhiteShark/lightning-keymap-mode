@@ -1,6 +1,7 @@
 ![general-key-layout](res/general-layout.png)
+![cheatsheet](res/cheatsheet.png)
 
-This minor mode intends to provide a more fast handling of Emacs
+This minor mode intends to provide a faster handling of Emacs
 during actual file editing.
 
 # Motivation
@@ -16,8 +17,6 @@ So what can be done instead? Well, why not creating a mixture of both
 worlds? 
 
 # Usage
-
-![cheatsheet](res/cheatsheet.png)
 
 In **lightning-keymap-mode** a keymap tailored for fast navigation and
 editing is superimposed on top of your regular keymaps using a *minor
@@ -49,14 +48,10 @@ regions).
 The evaluation functions bound to the **m** key are currently just
 supported for **ESS** and **python-mode**.
 
-For additional information and customization please refer to the
-[customization](https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Easy-Customization)
-group *Editing > Lightning* or the comment section in the beginning of
-[lightning-keymap-mode.el](lightning-keymap-mode.el).
-
 # Installation
 
-Make sure you have an **Emacs 25.1 or newer** [installed](https://www.gnu.org/software/emacs/download.html#gnu-linux).
+Make sure you have an **Emacs 25.1 or newer**
+[installed](https://www.gnu.org/software/emacs/download.html#gnu-linux). 
 
 In order to use the lightning-keymap-mode, you have to clone this
 repository to your local device
@@ -76,13 +71,26 @@ folder.
 ```
 
 
-# TODO
+# Customization
 
-- Some minor modes, like **flyspell** or **isearch**, add their own
-  key bindings on top of the active keymap using
-  [overlays](https://www.gnu.org/software/emacs/manual/html_node/elisp/Active-Keymaps.html#Active-Keymaps). These
-  will, unfortunately, break the keymap of lightning-keymap-mode. But
-  there are ways to circumvent this problem and I'm working on it.
+By setting the **lightning-basic-keymap** variable to non-nil, the
+user can decide whether she wants to use just the basic navigation and
+line breaking instead of the full keybindings offered by the
+lightning-keymap-mode. 
+
+If the variable **lightning-keymap-mode-modifies-string-replacement**
+is set to non-nil, not the internal `string-replace` function but a
+customized version `lightning-keymap-mode-replace-string` will be
+used. Within this function the default option of the *FROM* argument
+of the replacement function (what to replace) will be set according to
+word at point (at the current position). Therefore it loses the
+ability to perform the last replacement as the default. You are free
+to decide on your own which functionality you find more useful.
+
+For additional information and customization please refer to the
+[customization](https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Easy-Customization)
+group *Editing > Lightning* or the comment section in the beginning of
+[lightning-keymap-mode.el](lightning-keymap-mode.el).
 
 ---
 

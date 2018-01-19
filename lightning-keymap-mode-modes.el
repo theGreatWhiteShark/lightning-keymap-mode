@@ -1,5 +1,5 @@
 ;;; lightning-keymap-mode-modes.el
-;; Contains addition, mode-specific functions used within the
+;; Contains additional, mode-specific functions used within the
 ;; lightning-keymap-mode.
 
 ;; Author: Philipp Müller <thetruephil@googlemail.com>
@@ -19,6 +19,73 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+;;;; Commentary:
+;;
+;; Functions defined within this file
+;;
+;;   `lightning-keymap-ess-evaluation-layer-1'
+;;
+;;     Evaluate the current line or region in the corresponding *iESS*
+;;     buffer.
+;;
+;;     After evaluation the focus remains in the current buffer and
+;;     the point is moved to the next line.
+;;     In order to invoke a *iESS* buffer use the \[R] command.
+;;
+;;   `lightning-keymap-ess-evaluation-layer-2'
+;;
+;;     Depending on whether a solid R document or a mixture of R and
+;;     markdown (using the `polymode') is edited this function will do
+;;     different things: 
+;;     - R: It evaluates the current paragraphs and moves the point to
+;;          the next one. The focus will remain in the current buffer.
+;;     - RMarkdown: It evaluates the whole chunk the point (cursor) is
+;;          located in. After evaluation the point remains at its
+;;          position and the focus remains in the current buffer.
+;;     Whether a R or RMarkdown document is edited the function will
+;;     determine using `buffer-file-name'.
+;;     All evaluations take place in a corresponding *iESS* buffer,
+;;     which can be invoked using the \[R] command.
+;;
+;;   `lightning-keymap-ess-evaluation-layer-3'
+;;
+;;     Depending on whether a solid R document or a mixture of R and
+;;     markdown (using the `polymode') is edited this function will do
+;;     different things: 
+;;     - R: It evaluates the whole buffer.The focus will remain in the
+;;          current buffer and the point at its position.
+;;     - RMarkdown: It exports the document into a .html file. Both
+;;          the point and the focus remain unchanged.
+;;     Whether a R or RMarkdown document is edited the function will
+;;     determine using `buffer-file-name'.
+;;     All evaluations take place in a corresponding *iESS* buffer,
+;;     which can be invoked using the \[R] command.
+;;
+;;   `lightning-keymap-python-evaluation-layer-1'
+;;
+;;     Evaluate the current line or region in the corresponding
+;;     *ipython* buffer.
+;;     After evaluation the focus remains in the current buffer and
+;;     the point is moved to the next line or at the end of the marked
+;;     region.
+;;
+;;   `lightning-keymap-python-evaluation-layer-2'
+;;
+;;     Evaluate the current paragraph in the corresponding *ipython*
+;;     buffer. 
+;;     After evaluation the focus is switched to the *ipython*
+;;     buffer.
+;;
+;;   `lightning-keymap-python-evaluation-layer-3'
+;;
+;;     Evaluate the whole document in the corresponding *ipython*
+;;     buffer.
+;;     After evaluation the focus is switched to the *ipython*
+;;     buffer. 
+;;
+;;  For more information check out the projects Github page:
+;;  https://github.com/theGreatWhiteShark/lightning-keymap-mode
+
 ;;; Custom functions defined in this document
 (defvar lightning-keymap-ess-evaluation-layer-1)
 (defvar lightning-keymap-ess-evaluation-layer-2)
@@ -29,7 +96,8 @@
 
 ;;; Function definitions
 (defun lightning-keymap-ess-evaluation-layer-1 ()
-  "Evaluate the current line or region in the corresponding *iESS* buffer.
+  "Evaluate the current line or region in the corresponding *iESS*
+buffer. 
 
 After evaluation the focus remains in the current buffer and the point
 is moved to the next line.
