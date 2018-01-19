@@ -61,7 +61,7 @@ git clone git@github.com:theGreatWhiteShark/lightning-keymap-mode.git
 ```
 
 
-and add the following lines to your `.emacs' file in your home
+and add the following lines to your *.emacs* file in your home
 folder.
 
 ``` lisp
@@ -69,7 +69,6 @@ folder.
 (require 'lightning-keymap-mode)
 (lightning-keymap-mode 1)
 ```
-
 
 # Customization
 
@@ -91,6 +90,12 @@ For additional information and customization please refer to the
 [customization](https://www.gnu.org/software/emacs/manual/html_mono/emacs.html#Easy-Customization)
 group *Editing > Lightning* or the comment section in the beginning of
 [lightning-keymap-mode.el](lightning-keymap-mode.el).
+
+# Notes
+
+If you plan to use **YASnippet** in combination with
+**lightning-keymap-mode**, be sure to use a YASnippet version >=
+0.12.0! 
 
 ---
 
