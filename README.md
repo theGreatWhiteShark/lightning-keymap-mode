@@ -9,7 +9,7 @@ during actual file editing.
 Let's face it, the navigation in plain Emacs is not that
 sophisticated. Actually, it's almost unusable. The approach of
 [Evil-mode](https://www.emacswiki.org/emacs/Evil), on the other hand,
-is not a bad idea. But I never really liked the way VI is 
+is not a bad idea but I never really liked the way VI is 
 doing things. Context switches are just not my style. I definitely
 prefer the key combination approach of Emacs.
 
@@ -18,7 +18,7 @@ worlds?
 
 # Usage
 
-In **lightning-keymap-mode** a keymap tailored for fast navigation and
+In the **lightning-keymap-mode** a keymap tailored for fast navigation and
 editing is superimposed on top of your regular keymaps using a *minor
 mode*. Since this might shadow some essential key bindings you use on
 a regular basis, you can turn the mode on and off using **F5**.
@@ -45,7 +45,7 @@ backwards a word, and *Ctrl + Meta + ,* deletes the current line
 (apart from this, those commands are also sensitive towards marked
 regions). 
 
-The evaluation functions bound to the **m** key are currently just
+The evaluation of code chunks bound to the **n** key are currently just
 supported for **ESS** and **python-mode**.
 
 # Installation
@@ -64,7 +64,7 @@ git clone git@github.com:theGreatWhiteShark/lightning-keymap-mode.git
 and add the following lines to your *.emacs* file in your home
 folder.
 
-``` lisp
+``` cl
 (add-to-list 'load-path "~/PATH-YOU-CLONED-LIGHTNING-KEYMAP-MODE-TO")
 (require 'lightning-keymap-mode)
 (lightning-keymap-mode 1)
@@ -78,11 +78,11 @@ line breaking instead of the full keybindings offered by the
 lightning-keymap-mode. 
 
 If the variable **lightning-keymap-mode-modifies-string-replacement**
-is set to non-nil, not the internal `string-replace` function but a
+is set to non-nil, not the internal `string-replace` function, but a
 customized version `lightning-keymap-mode-replace-string` will be
 used. Within this function the default option of the *FROM* argument
 of the replacement function (what to replace) will be set according to
-word at point (at the current position). Therefore it loses the
+word at point (at the current position). Therefore, it loses the
 ability to perform the last replacement as the default. You are free
 to decide on your own which functionality you find more useful.
 
