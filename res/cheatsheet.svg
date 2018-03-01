@@ -18,7 +18,7 @@
    inkscape:version="0.48.5 r10040"
    enable-background="new"
    sodipodi:docname="cheatsheet.svg"
-   inkscape:export-filename="/home/phil/git/configurations-and-scripts/emacs/lightning-keymap-mode/res/cheatsheet.png"
+   inkscape:export-filename="/home/phil/git/configurations-and-scripts/emacs/lightning-keymap-mode/res/general-layout2.png"
    inkscape:export-xdpi="300"
    inkscape:export-ydpi="300">
   <defs
@@ -7959,16 +7959,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="222.97197"
-     inkscape:cy="600.28778"
+     inkscape:zoom="0.50000001"
+     inkscape:cx="541.88114"
+     inkscape:cy="347.90895"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-bbox="true"
-     inkscape:window-width="1362"
+     inkscape:window-width="679"
      inkscape:window-height="729"
-     inkscape:window-x="0"
+     inkscape:window-x="683"
      inkscape:window-y="1938"
      inkscape:window-maximized="0"
      inkscape:snap-grids="true"
@@ -8857,18 +8857,6 @@
          width="1052.3622"
          height="744.09448" />
     </g>
-    <text
-       xml:space="preserve"
-       style="font-size:12.5px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="1221.8805"
-       y="376.39896"
-       id="text15987"
-       sodipodi:linespacing="125%"
-       transform="translate(0,308.2677)"><tspan
-         sodipodi:role="line"
-         id="tspan15989"
-         x="1221.8805"
-         y="376.39896">1</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:12.5px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
