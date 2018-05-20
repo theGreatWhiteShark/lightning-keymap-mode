@@ -43,6 +43,22 @@
 ;;     `lightning-keymap-mode-modifies-string-replacement' variable to
 ;;     non-nil.
 ;;
+;;   `lightning-keymap-mode-trim'
+;;
+;;     Trims whitespaces, newlines, and tabs in a certain direction.
+;;
+;;     This function deletes all newlines, tabulators, and whitespaces
+;;     in a certain direction and introduces a single whitespace
+;;     instead. Whenever there is neither a whitespace, newline, or
+;;     tabulator the function does alter the buffer.
+;;
+;;     The `direction' argument is a numeric value. If it is smaller
+;;     then `0' all whitespaces, newlines, and tabulators to the left
+;;     of the `point' are trimmed. If bigger then `0' they are trimmed
+;;     to the right. For a `direction' equals zero the whitespaces,
+;;     newlines, and tabulators are trimmed in both directions."
+;;
+;;
 ;;  For more information check out the projects Github page:
 ;;  https://github.com/theGreatWhiteShark/lightning-keymap-mode
 
@@ -162,6 +178,71 @@ non-nil."
 			    nil (buffer-end -1) (buffer-end 1)))
 	  ))))
   )
+
+(defun lightning-keymap-mode-trim (direction)
+  "Trims whitespaces, newlines, and tabs in a certain direction.
+
+This function deletes all newlines, tabulators, and whitespaces in a
+certain direction and introduces a single whitespace instead. Whenever
+there is neither a whitespace, newline, or tabulator the function does
+alter the buffer.
+
+The `direction' argument is a numeric value. If it is smaller then `0'
+all whitespaces, newlines, and tabulators to the left of the `point'
+are trimmed. If bigger then `0' they are trimmed to the right. For a
+`direction' equals zero the whitespaces, newlines, and tabulators are
+trimmed in both directions."
+
+  (interactive)
+
+  ;; Check, whether the argument is numeric
+  (unless (numberp direction)
+    (inline-error "The `direction' argument of the
+  `lightning-keymap-mode-trim' function has to be provided as a
+  numerical value. < 0 - trimmed to the left, > 0 - trimmed to the
+  right, == 0 - trimmed in both directions"))
+
+  ;; Regular expression containing the elements we want to trim:
+  ;; whitespaces, tabulators, and newlines
+  (setq lightning-keymap-mode-trim-regexp "[^\n\t\r[:blank:]]")
+
+  ;; Delete to the left
+  (if (<= direction 0)
+      (progn
+	(save-excursion
+	  (setq trim-region-end (point))
+	  ;; Leaves the point at the first symbol, which does not
+	  ;; matches the regular expression
+	  (re-search-backward lightning-keymap-mode-trim-regexp)
+	  ;; One step to the right, since we do not want to delete the
+	  ;; symbol found in the search.
+	  (right-char)
+	  (setq trim-region-start (point)))
+	;;
+	;; If there is a region to trim, do it.
+	(if (< trim-region-start trim-region-end)
+	    (progn
+	      (kill-region trim-region-start trim-region-end)
+	      (insert " ")))))
+  ;; Delete to the right
+  (if (>= direction 0)
+      (save-excursion
+	(setq trim-region-start (point))
+	;; Leaves the point after the first symbol, which does not
+	;; matches the regular expression
+	(re-search-forward lightning-keymap-mode-trim-regexp)
+	;; One step to the left, since we do not want to delete the
+	;; symbol found in the search.
+	(left-char)
+	(setq trim-region-end (point))
+	;;
+	;; If there is a region to trim, do it.
+	(if (< trim-region-start trim-region-end)
+	    (progn
+	      (kill-region trim-region-start trim-region-end)
+	      (insert " ")))))
+  )
+
 (provide 'lightning-keymap-mode-functions)
 ;;
 ;;; End of lightning-keymap-mode-functions.el
