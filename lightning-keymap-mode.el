@@ -544,30 +544,37 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
 	(interactive)
 	(if mark-active
 	    (kill-region (region-beginning) (region-end))
-	  (backward-kill-word
-	   lightning-delete-words-fast))))
+	  (progn
+	    (lightning-keymap-mode-trim-to-bracket -1)))))
     (define-key lightning-keymap-mode-map (kbd "M->")
       (lambda()
 	(interactive)
 	(if mark-active
 	    (kill-region (region-beginning) (region-end))
-	  (kill-word lightning-delete-words-fast))))
+	  (progn
+	    (lightning-keymap-mode-trim-to-bracket 1)))))
     ;; Fifth layer: delete forward or backward multiple characters or
     ;; region. 
     (define-key lightning-keymap-mode-map (kbd "C-<")
       (lambda()
 	(interactive)
 	(if mark-active
-	    (kill-region (region-beginning) (region-end))
-	  (backward-delete-char-untabify
-	   lightning-delete-chars-fast))))
+	    (progn
+	      (kill-region (region-beginning) (region-end))
+	      (lightning-keymap-mode-trim-whitespace -1))
+	  (progn
+	    (backward-delete-char-untabify 1)
+	    (lightning-keymap-mode-trim-whitespace -1)))))
     (define-key lightning-keymap-mode-map (kbd "C->")
       (lambda()
 	(interactive)
 	(if mark-active
-	    (kill-region (region-beginning) (region-end))
-	  (delete-forward-char 
-	   lightning-delete-chars-fast))))
+	    (progn
+	      (kill-region (region-beginning) (region-end))
+	      (lightning-keymap-mode-trim-whitespace 1))
+	  (progn
+	    (delete-forward-char 1)
+	    (lightning-keymap-mode-trim-whitespace 1)))))
     ;; Sixth layer: forward/backward delete paragraph
     (define-key lightning-keymap-mode-map (kbd "C-M-<")
       (lambda()

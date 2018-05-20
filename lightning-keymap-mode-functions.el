@@ -43,7 +43,7 @@
 ;;     `lightning-keymap-mode-modifies-string-replacement' variable to
 ;;     non-nil.
 ;;
-;;   `lightning-keymap-mode-trim'
+;;   `lightning-keymap-mode-trim-whitespace'
 ;;
 ;;     Trims whitespaces, newlines, and tabs in a certain direction.
 ;;
@@ -57,6 +57,24 @@
 ;;     of the `point' are trimmed. If bigger then `0' they are trimmed
 ;;     to the right. For a `direction' equals zero the whitespaces,
 ;;     newlines, and tabulators are trimmed in both directions."
+;;
+;;   `lightning-keymap-mode-trim-to-bracket'
+;;
+;;     Trims whitespaces, newlines, and tabs until the next bracket is
+;;     reached.
+;;
+;;     This function deletes all newlines, tabulators, and whitespaces
+;;     in a certain direction and introduces a single whitespace
+;;     instead. Whenever there is neither a whitespace, newline, or
+;;     tabulator between the point and the next bracket the function
+;;     does alter the buffer. 
+;;
+;;     The `direction' argument is a numeric value. If it is smaller
+;;     then `0' all whitespaces, newlines, and tabulators to the left
+;;     of the `point' are trimmed. If bigger then `0' they are trimmed
+;;     to the right."
+;;
+;;     Currently the following brackets are recognized: (), {}, [], <>
 ;;
 ;;
 ;;  For more information check out the projects Github page:
@@ -179,7 +197,7 @@ non-nil."
 	  ))))
   )
 
-(defun lightning-keymap-mode-trim (direction)
+(defun lightning-keymap-mode-trim-whitespace (direction)
   "Trims whitespaces, newlines, and tabs in a certain direction.
 
 This function deletes all newlines, tabulators, and whitespaces in a
@@ -198,13 +216,13 @@ trimmed in both directions."
   ;; Check, whether the argument is numeric
   (unless (numberp direction)
     (inline-error "The `direction' argument of the
-  `lightning-keymap-mode-trim' function has to be provided as a
-  numerical value. < 0 - trimmed to the left, > 0 - trimmed to the
-  right, == 0 - trimmed in both directions"))
-
+  `lightning-keymap-mode-trim-whitespace' function has to be provided
+  as a numerical value. < 0 - trimmed to the left, > 0 - trimmed to
+  the right, == 0 - trimmed in both directions"))
   ;; Regular expression containing the elements we want to trim:
   ;; whitespaces, tabulators, and newlines
-  (setq lightning-keymap-mode-trim-regexp "[^\n\t\r[:blank:]]")
+  (setq lightning-keymap-mode-trim-whitespace-regexp
+	"[^\n\t\r[:blank:]]")
 
   ;; Delete to the left
   (if (<= direction 0)
@@ -213,7 +231,8 @@ trimmed in both directions."
 	  (setq trim-region-end (point))
 	  ;; Leaves the point at the first symbol, which does not
 	  ;; matches the regular expression
-	  (re-search-backward lightning-keymap-mode-trim-regexp)
+	  (re-search-backward
+	   lightning-keymap-mode-trim-whitespace-regexp)
 	  ;; One step to the right, since we do not want to delete the
 	  ;; symbol found in the search.
 	  (right-char)
@@ -230,7 +249,8 @@ trimmed in both directions."
 	(setq trim-region-start (point))
 	;; Leaves the point after the first symbol, which does not
 	;; matches the regular expression
-	(re-search-forward lightning-keymap-mode-trim-regexp)
+	(re-search-forward
+	 lightning-keymap-mode-trim-whitespace-regexp)
 	;; One step to the left, since we do not want to delete the
 	;; symbol found in the search.
 	(left-char)
@@ -242,6 +262,76 @@ trimmed in both directions."
 	      (kill-region trim-region-start trim-region-end)
 	      (insert " ")))))
   )
+
+
+(defun lightning-keymap-mode-trim-to-bracket (direction)
+  "Trims whitespaces, newlines, and tabs until the next bracket is reached.
+
+This function deletes all newlines, tabulators, and whitespaces in a
+certain direction and introduces a single whitespace instead. Whenever
+there is neither a whitespace, newline, or tabulator between the point
+and the next bracket the function does alter the buffer.
+
+The `direction' argument is a numeric value. If it is smaller then `0'
+all whitespaces, newlines, and tabulators to the left of the `point'
+are trimmed. If bigger then `0' they are trimmed to the right.
+
+Currently the following brackets are recognized: (), {}, [], <>"
+
+  (interactive)
+
+  ;; Check, whether the argument is numeric
+  (unless (numberp direction)
+    (inline-error "The `direction' argument of the
+  `lightning-keymap-mode-trim-to-bracket' function has to be provided
+  as a numerical value. < 0 - trimmed to the left, > 0 - trimmed to
+  the right, == 0 - trimmed in both directions"))
+  ;; Regular expression containing the elements until which the buffer
+  ;; has to be trimmed. Apart from the regular bracket ( (,[,{ ) the
+  ;; lesser and greater then symbols have been added as well to ensure
+  ;; the function will also work with XML type buffers. 
+  (setq lightning-keymap-mode-trim-to-bracket-regexp
+	"[\]\[\(\)\{\}\<\>]")
+
+  ;; Delete to the left
+  (if (<= direction 0)
+      (progn
+	(save-excursion
+	  (setq trim-region-end (point))
+	  ;; Leaves the point at the first symbol, which does not
+	  ;; matches the regular expression
+	  (re-search-backward
+	   lightning-keymap-mode-trim-to-bracket-regexp)
+	  ;; One step to the right, since we do not want to delete the
+	  ;; symbol found in the search.
+	  (right-char)
+	  (setq trim-region-start (point)))
+	;;
+	;; If there is a region to trim, do it.
+	(if (< trim-region-start trim-region-end)
+	    (progn
+	      (kill-region trim-region-start trim-region-end)
+	      (insert " ")))))
+  ;; Delete to the right
+  (if (>= direction 0)
+      (save-excursion
+	(setq trim-region-start (point))
+	;; Leaves the point after the first symbol, which does not
+	;; matches the regular expression
+	(re-search-forward
+	 lightning-keymap-mode-trim-to-bracket-regexp)
+	;; One step to the left, since we do not want to delete the
+	;; symbol found in the search.
+	(left-char)
+	(setq trim-region-end (point))
+	;;
+	;; If there is a region to trim, do it.
+	(if (< trim-region-start trim-region-end)
+	    (progn
+	      (kill-region trim-region-start trim-region-end)
+	      (insert " ")))))
+  )
+
 
 (provide 'lightning-keymap-mode-functions)
 ;;
