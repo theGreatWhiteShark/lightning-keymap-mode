@@ -57,7 +57,7 @@ In order to use the lightning-keymap-mode, you have to clone this
 repository to your local device
 
 ``` bash
-git clone git@github.com:theGreatWhiteShark/lightning-keymap-mode.git
+git clone git@gitlab.com:theGreatWhiteShark/lightning-keymap-mode.git
 ```
 
 

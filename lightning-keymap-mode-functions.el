@@ -3,7 +3,7 @@
 
 ;; Author: Philipp Müller <thetruephil@googlemail.com>
 ;; Maintainer: Philipp Müller <thetruephil@googlemail.com>
-;; URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
+;; URL: https://gitlab.com/theGreatWhiteShark/lightning-keymap-mode
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -59,8 +59,8 @@
 ;;     newlines, and tabulators are trimmed in both directions."
 ;;
 ;;
-;;  For more information check out the projects Github page:
-;;  https://github.com/theGreatWhiteShark/lightning-keymap-mode
+;;  For more information check out the projects GitLab page:
+;;  https://gitlab.com/theGreatWhiteShark/lightning-keymap-mode
 
 (defun lightning-keymap-mode-replace-string (replacement-context)
   "Interactive function to replace strings using default values

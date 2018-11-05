@@ -17,3 +17,6 @@ v0.1.1
 - Instead of marking the whole buffer and executing the region,
   **lightning-keymap-ess-evaluation-layer-3** now calls the
   *ess-eval-buffer* function for .R files.
+- Migrate to GitLab.
+- Introducing both the *lightning-keymap-version* variable and
+  **lightning-keymap-version()** function.

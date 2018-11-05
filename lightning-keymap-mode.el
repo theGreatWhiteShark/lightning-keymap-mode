@@ -2,10 +2,10 @@
 
 ;; Author: Philipp Müller <thetruephil@googlemail.com>
 ;; Maintainer: Philipp Müller <thetruephil@googlemail.com>
-;; Version: 0.1.0
+;; Version: 0.1.1
 ;; Created: January 19, 2018
-;; X-URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
-;; URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
+;; X-URL: https://gitlab.com/theGreatWhiteShark/lightning-keymap-mode
+;; URL: https://gitlab.com/theGreatWhiteShark/lightning-keymap-mode
 ;; Keywords: keymap, navigation
 ;; Compatibility: GNU Emacs: >=25.1
 
@@ -100,6 +100,16 @@
 ;;
 ;;  Further internal or debugging variables and functions:
 ;;
+;;    `lightning-keymap-version'
+;;
+;;      String specifying the current version of the lightning keymap
+;;      mode.
+;;
+;;    `lightning-keymap-version'
+;;
+;;      Function returning a string with the current version of the
+;;      lightning keymap mode.
+;;
 ;;    `lightning-debugging'
 ;;
 ;;      If set to a value other than nil this, variable triggers the
@@ -143,8 +153,8 @@
 ;;      of those two cases did happen, the `overriding-local-map'
 ;;      variable will be updated.
 ;;
-;;  For more information check out the projects Github page:
-;;  https://github.com/theGreatWhiteShark/lightning-keymap-mode
+;;  For more information check out the projects GitLab page:
+;;  https://gitlab.com/theGreatWhiteShark/lightning-keymap-mode
 
 (require 'lightning-keymap-mode-modes)
 (require 'lightning-keymap-mode-functions)
@@ -233,6 +243,16 @@
 
 (defvar lightning-debugging nil "Active debugging messages by setting
 this variable non-nil")
+
+(defvar lightning-keymap-version "0.1.1"
+  "String specifying the current version of the lightning keymap
+mode." )
+(defun lightning-keymap-version()
+  "Return a string with the current version of the lightning keymap
+mode."
+  (interactive)
+  (message (concat "lightning-keymap-version: "
+		   lightning-keymap-version)))
 
 ;; Defining a global key to toggle the lightning-keymap (unless the
 ;; `lightning-toggle-key' wasn't set to nil).

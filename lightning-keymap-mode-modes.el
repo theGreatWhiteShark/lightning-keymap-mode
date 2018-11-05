@@ -4,7 +4,7 @@
 
 ;; Author: Philipp Müller <thetruephil@googlemail.com>
 ;; Maintainer: Philipp Müller <thetruephil@googlemail.com>
-;; URL: https://github.com/theGreatWhiteShark/lightning-keymap-mode
+;; URL: https://gitlab.com/theGreatWhiteShark/lightning-keymap-mode
 
 ;; This program is free software: you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -84,8 +84,8 @@
 ;;     After evaluation the focus is switched to the *ipython*
 ;;     buffer. 
 ;;
-;;  For more information check out the projects Github page:
-;;  https://github.com/theGreatWhiteShark/lightning-keymap-mode
+;;  For more information check out the projects GitLab page:
+;;  https://gitlab.com/theGreatWhiteShark/lightning-keymap-mode
 
 ;;; Custom functions defined in this document
 (defvar lightning-keymap-ess-evaluation-layer-1)
