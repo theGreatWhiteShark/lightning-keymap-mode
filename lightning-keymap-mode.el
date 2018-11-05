@@ -737,13 +737,17 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
 
   ;; Those features are not part of the basic version of the keymap.
   (unless lightning-basic-keymap
-    ;; ESS (Emacs speaks statistics) - a very convenient mode for
-    ;; manipulating R files.
-    ;;
     ;; Make sure the second layer is gonna be executed on all kind of
     ;; machines.
+    ;;
     (define-key key-translation-map (kbd "<M-n>") (kbd "M-n"))
-    (when (assq 'ess package-alist)
+    ;; ESS (Emacs speaks statistics) - a very convenient mode for
+    ;; manipulating R files.
+    ;; By probing for the presence of a function called `ess-mode'
+    ;; both cases of having the package installed via
+    ;; `package-install' or having it manually loaded via the source
+    ;; files will be covered.
+    (when (functionp 'ess-mode)
       (add-hook
        'ess-mode-hook
        (lambda()
@@ -764,9 +768,10 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
 			'lightning-keymap-ess-evaluation-layer-3))))
 
     ;; Python-mode
-    ;; Since I don't seem to find the Python package in the
-    ;; `package-alist' variable, I will just check whether there is a
-    ;; function called `python-mode'.
+    ;; By probing for the presence of a function called `python-mode'
+    ;; both cases of having the package installed via
+    ;; `package-install' or having it manually loaded via the source
+    ;; files will be covered.
     (when (functionp 'python-mode)
       (add-hook
        'python-mode-hook

@@ -29,7 +29,8 @@
 ;;     buffer.
 ;;
 ;;     After evaluation the focus remains in the current buffer and
-;;     the point is moved to the next line.
+;;     the point is moved to the next line. This feature will only be
+;;     supported by ESS>=18.10.
 ;;     In order to invoke a *iESS* buffer use the \[R] command.
 ;;
 ;;   `lightning-keymap-ess-evaluation-layer-2'
@@ -104,7 +105,7 @@ is moved to the next line.
 
 In order to invoke a *iESS* buffer use the \[R] command."
   (interactive)
-  (ess-eval-region-or-line-and-step))
+  (ess-eval-region-or-line-visibly-and-step))
 
 (defun lightning-keymap-ess-evaluation-layer-2 ()
   "Depending on whether a solid R document or a mixture of R and
@@ -130,7 +131,7 @@ be invoked using the \[R] command."
        ;; It's a .R file. Evaluate the next paragraph.
        (ess-eval-paragraph-and-step 1)
     ;; It's a .Rmd file. Export it to .html
-    (ess-eval-chunk 1)))
+    (polymode-eval-chunk (point))))
 
 (defun lightning-keymap-ess-evaluation-layer-3 ()
   "Depending on whether a solid R document or a mixture of R and
@@ -154,9 +155,7 @@ be invoked using the \[R] command."
 		       (- (length buffer-file-name) 2))
 	       ".R")
       ;; It's a .R file. Evaluate the whole document.
-      (save-excursion
-	(mark-whole-buffer)
-	(ess-eval-region (region-beginning) (region-end) nil))
+      (ess-eval-buffer 1)
     ;; It's a .Rmd file. Export it to .html.
     ;; Since this requires the `polymode' package and RMarkdown files
     ;; could be edited in the plain ESS mode as well, there will be a 
