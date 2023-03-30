@@ -686,23 +686,23 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
     ;; already the behaviour we want, let's keep it. Alternatively:
     ;; https://superuser.com/questions/424533/emacs-rebind-c-i-while-keeping-tab-bindings
     ;; Second layer: Indent the current paragraph or a marked region.
-    (define-key lightning-keymap-mode-map (kbd "M-i")
-      (lambda()
-	(interactive)
-	(save-excursion
-	  (if mark-active
-	      (indent-region (region-beginning) (region-end))
-	    (progn
-	      (backward-paragraph)
-	      (mark-paragraph)
-	      (indent-region (region-beginning) (region-end)))))))
-    ;; Third layer: Indent the whole buffer.
-    (define-key lightning-keymap-mode-map (kbd "C-M-i")
-      (lambda ()
-	(interactive)
-	(save-excursion
-	  (mark-whole-buffer)
-	  (indent-region (region-beginning) (region-end)))))
+    ;; (define-key lightning-keymap-mode-map (kbd "M-i")
+    ;;   (lambda()
+	;; (interactive)
+	;; (save-excursion
+	;;   (if mark-active
+	;;       (indent-region (region-beginning) (region-end))
+	;;     (progn
+	;;       (backward-paragraph)
+	;;       (mark-paragraph)
+	;;       (indent-region (region-beginning) (region-end)))))))
+    ;; ;; Third layer: Indent the whole buffer.
+    ;; (define-key lightning-keymap-mode-map (kbd "C-M-i")
+    ;;   (lambda ()
+	;; (interactive)
+	;; (save-excursion
+	;;   (mark-whole-buffer)
+	;;   (indent-region (region-beginning) (region-end)))))
     ;;
     ;; String replacement
     ;; 
