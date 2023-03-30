@@ -924,7 +924,11 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
 	  (message "\nlightning-keymap-mode-map used to overwrite the local map") 
 	  (message "\n%S" lightning-keymap-mode-map)
 	  (message "\noverriding-local-map was set and returned")))
-    (setq overriding-local-map lightning-keymap-mode-map)
+
+	(if (assq 'company-mode minor-mode-alist)
+		(company-enable-overriding-keymap lightning-keymap-mode-map)
+	  (setq overriding-local-map lightning-keymap-mode-map))
+
     (setq lightning-keymap-mode-dummy-local-map
 	  lightning-keymap-mode-map)
     overriding-local-map
