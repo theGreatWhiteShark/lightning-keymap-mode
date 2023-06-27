@@ -346,70 +346,70 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
       ;; different than just moving a char or a line. Therefore the
       ;; following keystrokes are converted into a list of the
       ;; underlying keystrokes and sent to Emacs for interpretation.
-      (define-key map (kbd "C-S-j")
-	(lambda()
-	  (interactive)
-	  ;; Find the event code for [left] in the
-	  ;; `key-translation-map'. This is necessary, since
-	  ;; `unread-command-events' just supports some very specific
-	  ;; input formats.
-	  (setq lightning-keymap-event-code nil)
-	  (dolist (ii (cdr key-translation-map)
-		      lightning-keymap-event-code)
-	    (if (string= (format "%s" (kbd "<left>"))
-			 (format "%s" (cdr ii)))
-		(setq lightning-keymap-event-code (car ii))))
-	  (setq unread-command-events
-		(make-list lightning-jump-chars-fast
-			   lightning-keymap-event-code))))
-      (define-key map (kbd "C-:")
-	(lambda()
-	  (interactive)
-	  ;; Find the event code for [right] in the
-	  ;; `key-translation-map'. This is necessary, since
-	  ;; `unread-command-events' just supports some very specific
-	  ;; input formats.
-	  (setq lightning-keymap-event-code nil)
-	  (dolist (ii (cdr key-translation-map)
-		      lightning-keymap-event-code)
-	    (if (string= (format "%s" (kbd "<right>"))
-			 (format "%s" (cdr ii)))
-		(setq lightning-keymap-event-code (car ii))))
-	  (setq unread-command-events
-		(make-list lightning-jump-chars-fast
-			   lightning-keymap-event-code))))
-      (define-key map (kbd "C-S-l")
-	(lambda()
-	  (interactive)
-	  ;; Find the event code for [up] in the
-	  ;; `key-translation-map'. This is necessary, since
-	  ;; `unread-command-events' just supports some very specific
-	  ;; input formats.
-	  (setq lightning-keymap-event-code nil)
-	  (dolist (ii (cdr key-translation-map)
-		      lightning-keymap-event-code)
-	    (if (string= (format "%s" (kbd "<up>"))
-			 (format "%s" (cdr ii)))
-		(setq lightning-keymap-event-code (car ii))))
-	  (setq unread-command-events
-		(make-list lightning-jump-chars-fast
-			   lightning-keymap-event-code))))
-      (define-key map (kbd "C-S-k")
-	(lambda()
-	  (interactive)
-	  ;; Find the event code for [up] in the
-	  ;; `key-translation-map'. This is necessary, since
-	  ;; `unread-command-events' just supports some very specific
-	  ;; input formats.
-	  (setq lightning-keymap-event-code nil)
-	  (dolist (ii (cdr key-translation-map)
-		      lightning-keymap-event-code)
-	    (if (string= (format "%s" (kbd "<down>"))
-			 (format "%s" (cdr ii)))
-		(setq lightning-keymap-event-code (car ii))))
-	  (setq unread-command-events
-		(make-list lightning-jump-chars-fast
-			   lightning-keymap-event-code))))
+    ;;   (define-key map (kbd "C-S-j")
+	;; (lambda()
+	;;   (interactive)
+	;;   ;; Find the event code for [left] in the
+	;;   ;; `key-translation-map'. This is necessary, since
+	;;   ;; `unread-command-events' just supports some very specific
+	;;   ;; input formats.
+	;;   (setq lightning-keymap-event-code nil)
+	;;   (dolist (ii (cdr key-translation-map)
+	;; 	      lightning-keymap-event-code)
+	;;     (if (string= (format "%s" (kbd "<left>"))
+	;; 		 (format "%s" (cdr ii)))
+	;; 	(setq lightning-keymap-event-code (car ii))))
+	;;   (setq unread-command-events
+	;; 	(make-list lightning-jump-chars-fast
+	;; 		   lightning-keymap-event-code))))
+    ;;   (define-key map (kbd "C-:")
+	;; (lambda()
+	;;   (interactive)
+	;;   ;; Find the event code for [right] in the
+	;;   ;; `key-translation-map'. This is necessary, since
+	;;   ;; `unread-command-events' just supports some very specific
+	;;   ;; input formats.
+	;;   (setq lightning-keymap-event-code nil)
+	;;   (dolist (ii (cdr key-translation-map)
+	;; 	      lightning-keymap-event-code)
+	;;     (if (string= (format "%s" (kbd "<right>"))
+	;; 		 (format "%s" (cdr ii)))
+	;; 	(setq lightning-keymap-event-code (car ii))))
+	;;   (setq unread-command-events
+	;; 	(make-list lightning-jump-chars-fast
+	;; 		   lightning-keymap-event-code))))
+    ;;   (define-key map (kbd "C-S-l")
+	;; (lambda()
+	;;   (interactive)
+	;;   ;; Find the event code for [up] in the
+	;;   ;; `key-translation-map'. This is necessary, since
+	;;   ;; `unread-command-events' just supports some very specific
+	;;   ;; input formats.
+	;;   (setq lightning-keymap-event-code nil)
+	;;   (dolist (ii (cdr key-translation-map)
+	;; 	      lightning-keymap-event-code)
+	;;     (if (string= (format "%s" (kbd "<up>"))
+	;; 		 (format "%s" (cdr ii)))
+	;; 	(setq lightning-keymap-event-code (car ii))))
+	;;   (setq unread-command-events
+	;; 	(make-list lightning-jump-chars-fast
+	;; 		   lightning-keymap-event-code))))
+    ;;   (define-key map (kbd "C-S-k")
+	;; (lambda()
+	;;   (interactive)
+	;;   ;; Find the event code for [up] in the
+	;;   ;; `key-translation-map'. This is necessary, since
+	;;   ;; `unread-command-events' just supports some very specific
+	;;   ;; input formats.
+	;;   (setq lightning-keymap-event-code nil)
+	;;   (dolist (ii (cdr key-translation-map)
+	;; 	      lightning-keymap-event-code)
+	;;     (if (string= (format "%s" (kbd "<down>"))
+	;; 		 (format "%s" (cdr ii)))
+	;; 	(setq lightning-keymap-event-code (car ii))))
+	;;   (setq unread-command-events
+	;; 	(make-list lightning-jump-chars-fast
+	;; 		   lightning-keymap-event-code))))
       ;; Sixth layer: even faster scrolling than in the fifth layer
        (define-key map (kbd "C-M-S-j")
 	(lambda()
@@ -925,9 +925,7 @@ major mode or minor mode maps attached to `lightning-keymap-mode-map'."
 	  (message "\n%S" lightning-keymap-mode-map)
 	  (message "\noverriding-local-map was set and returned")))
 
-	(if (assq 'company-mode minor-mode-alist)
-		(company-enable-overriding-keymap lightning-keymap-mode-map)
-	  (setq overriding-local-map lightning-keymap-mode-map))
+	(setq overriding-local-map lightning-keymap-mode-map)
 
     (setq lightning-keymap-mode-dummy-local-map
 	  lightning-keymap-mode-map)
